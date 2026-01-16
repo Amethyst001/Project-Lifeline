@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Video Archive (unused videos - not for demo)
+video_archive/
+# Note: test_videos_merged/ is NOT ignored - it contains the demo videos
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

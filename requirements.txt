@@ -1,0 +1,7 @@
+flask
+flask-cors
+google-genai
+yt-dlp
+requests
+python-dotenv
+imageio-ffmpeg

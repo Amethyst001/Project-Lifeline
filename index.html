@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Lifeline | Lagos Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #0c0c14;
+            --bg-secondary: #13131d;
+            --bg-card: #1a1a26;
+            --bg-elevated: #222230;
+            --accent-primary: #22d3ee;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --accent-critical: #dc2626;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-default: rgba(255, 255, 255, 0.08);
+            --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.25);
+        }
+
+        /* Custom Leaflet Tooltip */
+        .leaflet-tooltip {
+            background: rgba(19, 19, 29, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(34, 211, 238, 0.15);
+        }
+
+        .leaflet-tooltip::before {
+            border-top-color: rgba(34, 211, 238, 0.3) !important;
+        }
+
+        .leaflet-tooltip-top::before {
+            border-top-color: rgba(34, 211, 238, 0.3) !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-elevated);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-subtle);
+            height: 56px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), #0891b2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .logo-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: #fff;
+        }
+
+        .logo-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .logo-text span {
+            color: var(--accent-primary);
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 0 0.875rem;
+            border-right: 1px solid var(--border-subtle);
+        }
+
+        .metric:last-child {
+            border: none;
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        .metric-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.875rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-success);
+        }
+
+        .status-dot.warning {
+            background: var(--accent-warning);
+        }
+
+        .status-dot.critical {
+            background: var(--accent-danger);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            height: calc(100vh - 56px);
+        }
+
+        .map-section {
+            position: relative;
+            background: var(--bg-primary);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Hide Leaflet attribution */
+        .leaflet-control-attribution {
+            display: none !important;
+        }
+
+        .leaflet-container {
+            background: var(--bg-primary) !important;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--text-muted);
+        }
+
+        .sidebar-title {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .zones-container {
+            padding: 0.625rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Zone Cards */
+        .zone-card {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .zone-card:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-elevated);
+        }
+
+        .zone-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent-success);
+            border-radius: 3px 0 0 3px;
+        }
+
+        .zone-card.warning::before {
+            background: var(--accent-warning);
+        }
+
+        .zone-card.critical::before {
+            background: var(--accent-danger);
+        }
+
+        .zone-card.flooded::before {
+            background: var(--accent-critical);
+        }
+
+        .zone-card.flooded {
+            background: rgba(220, 38, 38, 0.06);
+        }
+
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .zone-info {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .zone-info svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--text-secondary);
+        }
+
+        .zone-name {
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .zone-badge {
+            font-size: 0.55rem;
+            font-weight: 600;
+            padding: 2px 5px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .zone-badge.normal {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent-success);
+        }
+
+        .zone-badge.warning {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--accent-warning);
+        }
+
+        .zone-badge.critical {
+            background: rgba(239, 68, 68, 0.12);
+            color: var(--accent-danger);
+        }
+
+        .zone-badge.flooded {
+            background: rgba(220, 38, 38, 0.15);
+            color: #fca5a5;
+        }
+
+        .zone-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.35rem;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .zone-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .zone-stat svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--text-muted);
+        }
+
+        .inspect-hint {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .inspect-hint svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .zone-card:hover .inspect-hint {
+            opacity: 1;
+        }
+
+        /* Log Panel */
+        .log-panel {
+            padding: 0.625rem;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-subtle);
+            max-height: 130px;
+            overflow-y: auto;
+        }
+
+        .log-header {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .log-header svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--text-muted);
+        }
+
+        .log-entry {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+        }
+
+        .log-entry.event {
+            color: var(--accent-primary);
+        }
+
+        .log-entry.action {
+            color: var(--accent-success);
+        }
+
+        /* Inspector Modal */
+        .inspector-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inspector-overlay.active {
+            display: flex;
+        }
+
+        .inspector-modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 720px;
+            max-height: 85vh;
+            overflow: hidden;
+        }
+
+        .inspector-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.875rem 1rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .inspector-title {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .inspector-title svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--accent-primary);
+        }
+
+        .inspector-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            display: flex;
+        }
+
+        .inspector-close:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .inspector-close svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .inspector-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.875rem;
+            padding: 1rem;
+        }
+
+        .inspector-section {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 0.875rem;
+        }
+
+        .inspector-section-title {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 0.625rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Manual Override Styles */
+        .manual-mode .status-box-value {
+            cursor: pointer;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .manual-mode .status-box-value:hover {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .manual-badge {
+            display: none;
+            background: #f59e0b;
+            color: #000;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .manual-active .manual-badge {
+            display: inline-block;
+        }
+
+        .inspector-section-title svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .video-container {
+            background: var(--bg-elevated);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .reasoning-box {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            background: var(--bg-primary);
+            border-radius: 6px;
+            padding: 0.75rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .reasoning-line {
+            padding: 0.15rem 0;
+        }
+
+        .reasoning-line.highlight {
+            color: var(--accent-primary);
+        }
+
+        .reasoning-line.action {
+            color: var(--accent-success);
+            font-weight: 500;
+        }
+
+        .reasoning-line.warning {
+            color: var(--accent-warning);
+        }
+
+        .reasoning-line.critical {
+            color: var(--accent-danger);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.625rem;
+        }
+
+        .stat-box {
+            background: var(--bg-primary);
+            border-radius: 6px;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .stat-box-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .stat-box-label {
+            font-size: 0.55rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+            text-transform: uppercase;
+        }
+
+        .inspector-footer {
+            padding: 0.875rem 1rem;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            gap: 0.625rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), #0891b2);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--glow-cyan);
+        }
+
+        .btn-secondary {
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--accent-primary);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(34, 211, 238, 0.2);
+        }
+
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: var(--accent-danger);
+            color: #fff;
+        }
+
+        @media (max-width: 680px) {
+            .inspector-body {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon"><i data-lucide="waves"></i></div>
+            <div class="logo-text">PROJECT <span>LIFELINE</span></div>
+        </div>
+        <div class="header-stats">
+            <div class="metric">
+                <div class="metric-value" id="activeZones">4</div>
+                <div class="metric-label">Zones</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="assetsDeployed">4</div>
+                <div class="metric-label">Assets</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="deliveriesActive">12</div>
+                <div class="metric-label">Deliveries</div>
+            </div>
+        </div>
+        <div class="status-indicator">
+            <div class="status-dot" id="statusDot"></div><span id="statusText">MONITORING</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="map-section">
+            <div id="map"></div>
+        </section>
+
+        <aside class="sidebar">
+            <div class="sidebar-header"><i data-lucide="target"></i>
+                <div class="sidebar-title">Zone Status</div>
+            </div>
+            <div class="zones-container" id="zoneCards"></div>
+            <div class="log-panel">
+                <div class="log-header"><i data-lucide="scroll-text"></i><span class="sidebar-title">System Log</span>
+                </div>
+                <div id="systemLog"></div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Inspector Modal -->
+    <div class="inspector-overlay" id="inspectorOverlay" onclick="if(event.target===this)closeInspector()">
+        <div class="inspector-modal">
+            <div class="inspector-header">
+                <div class="inspector-title"><i data-lucide="scan-search"></i><span
+                        id="inspectorZoneName">Zone</span><span class="zone-badge critical"
+                        id="inspectorBadge">CRITICAL</span></div>
+                <button class="inspector-close" onclick="closeInspector()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="inspector-body">
+                <div class="inspector-section">
+                    <div class="inspector-section-title"><i data-lucide="video"></i> AI Visual Feed</div>
+                    <div class="video-container">
+                        <video id="inspectorVideo" controls muted autoplay loop>
+                            <source id="inspectorVideoSrc" src="" type="video/mp4">
+                            Video not supported
+                        </video>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-box-value" id="inspectorWater">65cm</div>
+                            <div class="stat-box-label">Water</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-value" id="inspectorAsset">--</div>
+                            <div class="stat-box-label">Asset</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-value" id="inspectorConf">87%</div>
+                            <div class="stat-box-label">Confidence</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="inspector-section">
+                    <div class="inspector-section-title"><i data-lucide="brain"></i> Agent Reasoning</div>
+                    <div class="reasoning-box" id="reasoningBox"></div>
+                    <div class="inspector-section-title" style="margin-top:0.75rem;"><i data-lucide="route"></i> Road
+                        Status</div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-box-value" id="inspectorTruck" onclick="toggleStatus('inspectorTruck')">--
+                            </div>
+                            <div class="stat-box-label">Truck</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-value" id="inspectorOkada" onclick="toggleStatus('inspectorOkada')">--
+                            </div>
+                            <div class="stat-box-label">Okada</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-box-value" id="inspectorCanoe" onclick="toggleStatus('inspectorCanoe')">--
+                            </div>
+                            <div class="stat-box-label">Canoe</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="inspector-footer">
+                <button class="btn btn-secondary" id="liveAnalysisBtn" onclick="runLiveAnalysis()"><i
+                        data-lucide="scan-eye"></i> Live Analysis</button>
+                <button class="btn btn-danger" id="overrideBtn" onclick="overrideAI()">Override AI</button>
+                <button class="btn btn-primary" onclick="dispatchFromInspector()">Dispatch Asset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Accurate Lagos zone coordinates
+        const ZONES = {
+            lekki: { lat: 6.4480, lon: 3.4723, name: "Lekki Phase 1", icon: "home", radius: 1200 },
+            ikoyi: { lat: 6.4530, lon: 3.4320, name: "Ikoyi", icon: "building-2", radius: 900 },
+            vi: { lat: 6.4280, lon: 3.4150, name: "Victoria Island", icon: "palmtree", radius: 1000 },
+            third_mainland: { lat: 6.4720, lon: 3.3950, name: "Third Mainland Bridge", icon: "milestone", radius: 600 }
+        };
+
+        // Video files for each zone (Randomly selected)
+        const ZONE_VIDEOS = {
+            lekki: [
+                "test_videos_merged/lekki_vgc_flood.mp4",
+                "test_videos_merged/lekki_downpour_flood.mp4",
+                "test_videos_merged/lekki_vi_houses_destroyed.mp4",
+                "test_videos_merged/ajah_flood.mp4"
+            ],
+            vi: [
+                "test_videos_merged/vi_ahmadu_bello_way.mp4",
+                "test_videos_merged/vi_canoes_after_rain.mp4",
+                "test_videos_merged/vi_flooded_island_brt.mp4"
+            ],
+            ikoyi: [
+                "test_videos_merged/banana_island_drone.mp4",
+                "test_videos_merged/ikoyi_bourdillon_flood.mp4" // Keeping this as it is high quality Ikoyi footage
+            ],
+            third_mainland: [
+                "test_videos_merged/third_mainland_bridge_inspection.mp4",
+                "test_videos_merged/third_mainland_oworo_flooded.mp4",
+                "test_videos_merged/third_mainland_water_rises.mp4"
+            ]
+        };
+
+        // Lagos bounds
+        const LAGOS_BOUNDS = [[6.35, 3.30], [6.55, 3.55]];
+
+        const ASSETS = { TRUCK: "truck", OKADA: "bike", CANOE: "sailboat" };
+
+        const SIMULATION = [
+            { minute: 0, event: "System Online", zones: { lekki: { water: 5, status: "NORMAL", asset: "TRUCK" }, ikoyi: { water: 3, status: "NORMAL", asset: "TRUCK" }, vi: { water: 8, status: "NORMAL", asset: "OKADA" }, third_mainland: { water: 2, status: "NORMAL", asset: "TRUCK" } } },
+            { minute: 10, event: "Rainfall Intensifying", zones: { lekki: { water: 18, status: "NORMAL", asset: "TRUCK" }, ikoyi: { water: 12, status: "NORMAL", asset: "TRUCK" }, vi: { water: 25, status: "WARNING", asset: "TRUCK" }, third_mainland: { water: 8, status: "NORMAL", asset: "TRUCK" } } },
+            { minute: 20, event: "Flood Warning: VI Roads", zones: { lekki: { water: 35, status: "WARNING", asset: "TRUCK" }, ikoyi: { water: 22, status: "WARNING", asset: "TRUCK" }, vi: { water: 48, status: "CRITICAL", asset: "CANOE" }, third_mainland: { water: 15, status: "NORMAL", asset: "TRUCK" } } },
+            { minute: 30, event: "Asset Swap: Lekki/VI", zones: { lekki: { water: 55, status: "CRITICAL", asset: "CANOE" }, ikoyi: { water: 42, status: "CRITICAL", asset: "CANOE" }, vi: { water: 75, status: "FLOODED", asset: "CANOE" }, third_mainland: { water: 32, status: "WARNING", asset: "TRUCK" } } },
+            { minute: 45, event: "Peak Flooding", zones: { lekki: { water: 85, status: "FLOODED", asset: "CANOE" }, ikoyi: { water: 68, status: "FLOODED", asset: "CANOE" }, vi: { water: 110, status: "FLOODED", asset: "CANOE" }, third_mainland: { water: 50, status: "CRITICAL", asset: "CANOE" } } },
+            { minute: 60, event: "Waters Receding", zones: { lekki: { water: 52, status: "CRITICAL", asset: "CANOE" }, ikoyi: { water: 38, status: "WARNING", asset: "TRUCK" }, vi: { water: 72, status: "FLOODED", asset: "CANOE" }, third_mainland: { water: 28, status: "WARNING", asset: "TRUCK" } } }
+        ];
+
+        let currentMinute = 0, isPlaying = false, playInterval, map, zoneMarkers = {}, loggedEvents = new Set(), currentInspectedZone = null, isManualMode = false;
+
+        // Helper: Fast typewriter effect for terminal-style output
+        function typeWriter(element, text, speed = 5) {
+            let i = 0;
+            element.textContent = '';
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Helper: Toggle status boxes in manual mode
+        function toggleStatus(elementId) {
+            if (!isManualMode) return;
+            const el = document.getElementById(elementId);
+            const current = el.innerText;
+
+            if (current.includes('SAFE')) el.innerHTML = '<span style="color:#ef4444">FAIL</span>';
+            else if (current.includes('FAIL')) el.innerHTML = '<span style="color:#22d3ee">REQ</span>';
+            else if (current.includes('REQ')) el.innerHTML = '<span style="color:#64748b">N/A</span>';
+            else el.innerHTML = '<span style="color:#10b981">SAFE</span>';
+
+            addLog(`[MANUAL] Status updated by Commander`, currentMinute, 'action');
+        }
+
+        function initMap() {
+            map = L.map('map', {
+                center: [6.45, 3.42],
+                zoom: 13,
+                zoomControl: false,
+                attributionControl: false,
+                maxBounds: LAGOS_BOUNDS,
+                maxBoundsViscosity: 1.0,
+                minZoom: 12,
+                maxZoom: 15
+            });
+            map.fitBounds(LAGOS_BOUNDS);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '' }).addTo(map);
+
+            // Geographic circles (radius in meters - scales with zoom)
+            Object.entries(ZONES).forEach(([id, zone]) => {
+                const marker = L.circle([zone.lat, zone.lon], {
+                    radius: zone.radius || 800,  // meters - scales with map
+                    fillColor: '#22d3ee',
+                    fillOpacity: 0.15,
+                    color: '#22d3ee',
+                    weight: 2
+                }).addTo(map);
+                marker.bindTooltip(zone.name, { permanent: false, direction: 'top' });
+                marker.on('click', () => openInspector(id));
+                zoneMarkers[id] = marker;
+            });
+        }
+
+        function getSimData(min) { for (let i = SIMULATION.length - 1; i >= 0; i--) if (SIMULATION[i].minute <= min) return SIMULATION[i]; return SIMULATION[0]; }
+        function getStatusColor(s) { return { NORMAL: '#10b981', WARNING: '#f59e0b', CRITICAL: '#ef4444', FLOODED: '#dc2626' }[s] || '#64748b'; }
+
+        function updateSimulation(min) {
+            currentMinute = parseInt(min);
+            document.getElementById('timeDisplay').textContent = `T+${min} MIN`;
+            document.getElementById('timeline').value = min;
+            const simData = getSimData(min);
+
+            let worst = 'NORMAL';
+            Object.values(simData.zones).forEach(z => {
+                if (z.status === 'FLOODED') worst = 'FLOODED';
+                else if (z.status === 'CRITICAL' && worst !== 'FLOODED') worst = 'CRITICAL';
+                else if (z.status === 'WARNING' && !['FLOODED', 'CRITICAL'].includes(worst)) worst = 'WARNING';
+            });
+
+            const dot = document.getElementById('statusDot'), txt = document.getElementById('statusText');
+            txt.textContent = worst === 'NORMAL' ? 'MONITORING' : worst;
+            dot.className = 'status-dot' + (worst === 'WARNING' ? ' warning' : ['CRITICAL', 'FLOODED'].includes(worst) ? ' critical' : '');
+
+            let html = '';
+            Object.entries(simData.zones).forEach(([id, z]) => {
+                const info = ZONES[id], cls = z.status.toLowerCase();
+                html += `<div class="zone-card ${cls}" onclick="openInspector('${id}')">
+                    <div class="zone-header"><div class="zone-info"><i data-lucide="${info.icon}"></i><span class="zone-name">${info.name}</span></div><span class="zone-badge ${cls}">${z.status}</span></div>
+                    <div class="zone-stats"><div class="zone-stat"><i data-lucide="droplets"></i>${z.water}cm</div><div class="zone-stat"><i data-lucide="${ASSETS[z.asset]}"></i>${z.asset}</div></div>
+                    <div class="inspect-hint"><i data-lucide="scan"></i>Click to inspect</div></div>`;
+                const m = zoneMarkers[id]; if (m) m.setStyle({ fillColor: getStatusColor(z.status), color: getStatusColor(z.status) });
+            });
+            document.getElementById('zoneCards').innerHTML = html;
+            lucide.createIcons();
+
+            const key = `${simData.minute}-${simData.event}`;
+            if (!loggedEvents.has(key)) { loggedEvents.add(key); addLog(simData.event, simData.minute, 'event'); }
+            if (currentInspectedZone) updateInspector(currentInspectedZone);
+        }
+
+        function addLog(msg, min, type = '') { document.getElementById('systemLog').innerHTML = `<div class="log-entry ${type}">[T+${min}m] ${msg}</div>` + document.getElementById('systemLog').innerHTML; }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('playBtn');
+            btn.innerHTML = isPlaying ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
+            lucide.createIcons();
+            if (isPlaying) playInterval = setInterval(() => { if (currentMinute >= 60) { togglePlay(); return; } updateSimulation(++currentMinute); }, 150);
+            else clearInterval(playInterval);
+        }
+
+        function openInspector(zoneId) {
+            currentInspectedZone = zoneId;
+            document.getElementById('inspectorOverlay').classList.add('active');
+            updateInspector(zoneId);
+        }
+
+        function updateInspector(zoneId) {
+            const simData = getSimData(currentMinute);
+            const zone = simData.zones[zoneId];
+            const info = ZONES[zoneId];
+
+            document.getElementById('inspectorZoneName').textContent = info.name;
+            const badge = document.getElementById('inspectorBadge');
+            badge.textContent = zone.status;
+            badge.className = `zone-badge ${zone.status.toLowerCase()}`;
+
+            // Load random zone video
+            const videoEl = document.getElementById('inspectorVideo');
+            const videos = ZONE_VIDEOS[zoneId];
+            if (videos && videos.length > 0) {
+                const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+                videoEl.src = randomVideo;
+
+                // Handle video playback errors (codec issues)
+                videoEl.onerror = function () {
+                    console.warn('Video codec not supported:', randomVideo);
+                    // Try next video in the list
+                    const currentIdx = videos.indexOf(randomVideo);
+                    if (currentIdx < videos.length - 1) {
+                        videoEl.src = videos[currentIdx + 1];
+                        videoEl.load();
+                    } else {
+                        videoEl.parentElement.innerHTML = `
+                            <div style="display:flex;align-items:center;justify-content:center;height:250px;background:#1e293b;color:#94a3b8;text-align:center;border-radius:8px;">
+                                <div>
+                                    <i data-lucide="video-off" style="width:48px;height:48px;margin-bottom:8px;"></i>
+                                    <p>Video codec not supported by browser</p>
+                                    <small style="color:#64748b;">Feed: ${randomVideo.split('/').pop()}</small>
+                                </div>
+                            </div>`;
+                        lucide.createIcons();
+                    }
+                };
+
+                videoEl.load();
+            }
+
+            // Clear stats initially (Wait for Live Analysis)
+            document.getElementById('inspectorWater').textContent = '--';
+            document.getElementById('inspectorAsset').textContent = '--';
+            document.getElementById('inspectorConf').textContent = '--';
+
+            // Clear road status
+            document.getElementById('inspectorTruck').innerHTML = '<span style="color:#64748b">--</span>';
+            document.getElementById('inspectorOkada').innerHTML = '<span style="color:#64748b">--</span>';
+            document.getElementById('inspectorCanoe').innerHTML = '<span style="color:#64748b">--</span>';
+
+            // Clear reasoning for new open (Wait for Live Analysis)
+            document.getElementById('reasoningBox').innerHTML = `<div class="reasoning-line">[ANALYSIS @ T+${currentMinute}m]</div>
+<div class="reasoning-line">> Status: WAITING FOR AI...</div>
+<div class="reasoning-line highlight">> Click 'Live Analysis' to run vision agent</div>`;
+        }
+
+        function closeInspector() { document.getElementById('inspectorOverlay').classList.remove('active'); currentInspectedZone = null; }
+
+        function overrideAI() {
+            isManualMode = !isManualMode; // Toggle
+            const liveBtn = document.getElementById('liveAnalysisBtn');
+            const overrideBtn = document.getElementById('overrideBtn');
+            const box = document.getElementById('reasoningBox');
+
+            if (isManualMode) {
+                // Enable Manual Mode
+                document.body.classList.add('manual-active');
+                document.querySelector('.inspector-body').classList.add('manual-mode');
+
+                // Disable Live Analysis
+                liveBtn.disabled = true;
+                liveBtn.innerHTML = '<i data-lucide="lock"></i> AI Locked';
+                liveBtn.classList.add('btn-secondary');
+
+                // Change Override button to "Resume AI"
+                overrideBtn.innerHTML = 'Resume AI';
+                overrideBtn.classList.remove('btn-danger');
+                overrideBtn.classList.add('btn-primary');
+
+                // Change map marker to purple
+                if (currentInspectedZone) {
+                    const m = zoneMarkers[currentInspectedZone];
+                    if (m) m.setStyle({ fillColor: '#a855f7', color: '#a855f7' });
+                }
+
+                addLog(`[MANUAL] Commander took control of ${ZONES[currentInspectedZone]?.name}`, currentMinute, 'action');
+
+                box.innerHTML = `
+<div class="reasoning-line highlight">[MANUAL MODE]</div>
+<div class="reasoning-line">> AI Analysis: Paused</div>
+<div class="reasoning-line">> Status Panels: Editable</div>
+<div class="reasoning-line">> Click "Resume AI" to restore</div>`;
+            } else {
+                // Restore AI Mode
+                document.body.classList.remove('manual-active');
+                document.querySelector('.inspector-body').classList.remove('manual-mode');
+
+                // Enable Live Analysis
+                liveBtn.disabled = false;
+                liveBtn.innerHTML = '<i data-lucide="scan-eye"></i> Live Analysis';
+                liveBtn.classList.remove('btn-secondary');
+
+                // Restore Override button
+                overrideBtn.innerHTML = 'Override AI';
+                overrideBtn.classList.remove('btn-primary');
+                overrideBtn.classList.add('btn-danger');
+
+                // Restore map marker to orange (neutral)
+                if (currentInspectedZone) {
+                    const m = zoneMarkers[currentInspectedZone];
+                    if (m) m.setStyle({ fillColor: '#f59e0b', color: '#f59e0b' });
+                }
+
+                addLog(`[AI] Control restored for ${ZONES[currentInspectedZone]?.name}`, currentMinute, 'event');
+
+                box.innerHTML = `
+<div class="reasoning-line">[ANALYSIS @ T+${currentMinute}m]</div>
+<div class="reasoning-line">> Status: WAITING FOR AI...</div>
+<div class="reasoning-line highlight">> Click 'Live Analysis' to run vision agent</div>`;
+            }
+            lucide.createIcons();
+        }
+
+        function dispatchFromInspector() {
+            const simData = getSimData(currentMinute);
+            addLog(`DISPATCH: Asset deployed to ${ZONES[currentInspectedZone].name}`, currentMinute, 'action');
+            closeInspector();
+        }
+
+        // API Integration
+        const API_BASE = 'http://localhost:5000/api';
+        let apiConnected = false;
+
+        async function checkApiConnection() {
+            try {
+                const res = await fetch(`${API_BASE}/health`);
+                apiConnected = res.ok;
+            } catch { apiConnected = false; }
+        }
+
+        async function fetchLiveAnalysis(zoneId, videoPath) {
+            if (!apiConnected) {
+                addLog(`[API] Offline - using simulation`, currentMinute, 'event');
+                return null;
+            }
+
+            try {
+                let url = `${API_BASE}/analyze/${zoneId}`;
+                let options = {};
+
+                if (videoPath) {
+                    url = `${API_BASE}/analyze/video`;
+                    options = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            location_id: zoneId,
+                            video_path: videoPath
+                        })
+                    };
+                }
+
+                const res = await fetch(url, options);
+                if (res.ok) return await res.json();
+            } catch (e) {
+                console.error('API Error:', e);
+            }
+            return null;
+        }
+
+        async function runLiveAnalysis() {
+            if (!currentInspectedZone) return;
+
+            const btn = document.getElementById('liveAnalysisBtn');
+            const box = document.getElementById('reasoningBox');
+            const videoEl = document.getElementById('inspectorVideo');
+
+            // Get current video path
+            let videoPath = videoEl.getAttribute('src') || videoEl.src;
+            if (videoPath && videoPath.includes('test_videos_merged')) {
+                const parts = videoPath.split('test_videos_merged');
+                videoPath = 'test_videos_merged' + parts[parts.length - 1];
+            }
+
+            btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Analyzing...';
+            btn.disabled = true;
+
+            addLog(`[AI] Analyzing ${ZONES[currentInspectedZone].name}...`, currentMinute, 'event');
+
+            // Calculate actual video size for realism
+            let videoSizeMB = '~5';
+            try {
+                // Estimate from video element if loaded
+                if (videoEl.duration && videoEl.duration > 0) {
+                    // Rough estimate: 1MB per 10 seconds of video at 480p
+                    videoSizeMB = Math.round(videoEl.duration / 10 * 1.5);
+                }
+            } catch (e) { }
+
+            // STREAMING SIMULATION (Realism)
+            let steps = [
+                '> Establishing Secure Uplink...',
+                `> Transmitting Video Packet (${videoSizeMB}MB)...`,
+                '> Vision Agent: PROCESSING...',
+                '> Extracting Hydrological Data...',
+                '> Inferring Logistics Decisions...'
+            ];
+            let stepIdx = 0;
+            box.innerHTML = ''; // clear for new stream
+
+            // Log "Scanning" updates while we wait
+            const streamInterval = setInterval(() => {
+                if (stepIdx < steps.length) {
+                    const div = document.createElement('div');
+                    div.className = 'reasoning-line';
+                    div.style.color = '#64748b';
+                    div.textContent = steps[stepIdx];
+                    box.appendChild(div);
+                    stepIdx++;
+                }
+            }, 800);
+
+            const result = await fetchLiveAnalysis(currentInspectedZone, videoPath);
+
+            clearInterval(streamInterval);
+
+            if (result && !result.error) {
+                // Update inspector with AI results
+                const flood = result.flood_assessment || result.visual_evidence || {};
+                const weather = result.weather_conditions || {};
+                const logistics = result.logistics_decision || {};
+                const temporal = result.temporal_analysis || {};
+
+                const waterCm = flood.water_level_cm || 0;
+                const asset = logistics.recommended_asset || 'TRUCK';
+                const conf = Math.round((result.meta_data?.confidence_score || 0.9) * 100);
+
+                document.getElementById('inspectorWater').textContent = `${waterCm}cm`;
+                document.getElementById('inspectorAsset').textContent = asset;
+                document.getElementById('inspectorConf').textContent = `${conf}%`;
+
+                const truckOk = waterCm <= 40, okadaOk = waterCm <= 20, canoeReq = waterCm >= 40;
+                document.getElementById('inspectorTruck').innerHTML = truckOk ? '<span style="color:#10b981">SAFE</span>' : '<span style="color:#ef4444">FAIL</span>';
+                document.getElementById('inspectorOkada').innerHTML = okadaOk ? '<span style="color:#10b981">SAFE</span>' : '<span style="color:#ef4444">FAIL</span>';
+                document.getElementById('inspectorCanoe').innerHTML = canoeReq ? '<span style="color:#22d3ee">REQ</span>' : '<span style="color:#64748b">N/A</span>';
+
+                // Display Final Text using Fast Typewriter
+                box.innerHTML = '';
+
+                const lines = [
+                    { text: `[LIVE ANALYSIS @ T+${currentMinute}m]`, cls: 'highlight' },
+                    { text: `> Source: ${result.meta_data?.source_type || 'video'}`, cls: '' },
+                    { text: `> Rain: ${weather.is_raining ? weather.rain_intensity : 'None'}`, cls: '' },
+                    { text: `> Flooding: ${flood.flooding_detected ? 'YES' : 'NO'}`, cls: '' },
+                    { text: `> Water Level: ~${waterCm}cm`, cls: '' },
+                    { text: `> Trend: ${temporal.trend}`, cls: '' },
+                    { text: `> STATUS: ${logistics.zone_status}`, cls: logistics.zone_status === 'FLOODED' ? 'critical' : 'warning' },
+                    { text: `> DECISION: DEPLOY ${asset}`, cls: 'highlight' }
+                ];
+
+                let lineIdx = 0;
+                function typeNextLine() {
+                    if (lineIdx < lines.length) {
+                        const line = lines[lineIdx];
+                        const div = document.createElement('div');
+                        div.className = `reasoning-line ${line.cls}`;
+                        box.appendChild(div);
+                        typeWriter(div, line.text, 5); // 5ms per char = FAST
+
+                        // Calculate delay for next line based on char count
+                        setTimeout(typeNextLine, (line.text.length * 5) + 50);
+                        lineIdx++;
+                    }
+                }
+                typeNextLine();
+
+                addLog(`[AI] ${ZONES[currentInspectedZone].name}: ${logistics.zone_status} - ${asset}`, currentMinute, 'action');
+
+                // Update map marker color
+                const m = zoneMarkers[currentInspectedZone];
+                if (m) m.setStyle({ fillColor: getStatusColor(logistics.zone_status), color: getStatusColor(logistics.zone_status) });
+            } else {
+                addLog(`[AI] Analysis failed - ${result?.error || 'Unknown error'}`, currentMinute, 'event');
+            }
+
+            btn.innerHTML = '<i data-lucide="scan-eye"></i> Live Analysis';
+            btn.disabled = false;
+            lucide.createIcons();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            updateSimulation(0);
+            lucide.createIcons();
+            checkApiConnection();
+        });
+    </script>
+</body>
+
+</html>
