@@ -941,10 +941,15 @@
         function getStatusColor(s) { return { NORMAL: '#10b981', WARNING: '#f59e0b', CRITICAL: '#ef4444', FLOODED: '#dc2626' }[s] || '#64748b'; }
 
         function updateSimulation(min) {
-            currentMinute = parseInt(min);
-            document.getElementById('timeDisplay').textContent = `T+${min} MIN`;
-            document.getElementById('timeline').value = min;
-            const simData = getSimData(min);
+            currentMinute = parseInt(min || 0);
+
+            // Timeline elements removed - skip if not present
+            const timeDisplay = document.getElementById('timeDisplay');
+            const timeline = document.getElementById('timeline');
+            if (timeDisplay) timeDisplay.textContent = `T+${min} MIN`;
+            if (timeline) timeline.value = min;
+
+            const simData = getSimData(currentMinute);
 
             let worst = 'NORMAL';
             Object.values(simData.zones).forEach(z => {
@@ -975,15 +980,6 @@
         }
 
         function addLog(msg, min, type = '') { document.getElementById('systemLog').innerHTML = `<div class="log-entry ${type}">[T+${min}m] ${msg}</div>` + document.getElementById('systemLog').innerHTML; }
-
-        function togglePlay() {
-            isPlaying = !isPlaying;
-            const btn = document.getElementById('playBtn');
-            btn.innerHTML = isPlaying ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
-            lucide.createIcons();
-            if (isPlaying) playInterval = setInterval(() => { if (currentMinute >= 60) { togglePlay(); return; } updateSimulation(++currentMinute); }, 150);
-            else clearInterval(playInterval);
-        }
 
         function openInspector(zoneId) {
             currentInspectedZone = zoneId;
