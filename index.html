@@ -232,7 +232,6 @@
         /* Sidebar */
         .sidebar {
             background: var(--bg-secondary);
-            border-left: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
         }
@@ -614,6 +613,12 @@
 
         .reasoning-line.critical {
             color: var(--accent-danger);
+        }
+
+        .reasoning-line.reasoning {
+            color: #818cf8;
+            font-style: italic;
+            font-size: 0.7rem;
         }
 
         .stats-grid {
@@ -1240,11 +1245,17 @@
                 const lines = [
                     { text: `[LIVE ANALYSIS @ T+${currentMinute}m]`, cls: 'highlight' },
                     { text: `> Source: ${result.meta_data?.source_type || 'video'}`, cls: '' },
+                    { text: `> Confidence: ${Math.round((result.meta_data?.confidence_score || 0.9) * 100)}%`, cls: '' },
                     { text: `> Rain: ${weather.is_raining ? weather.rain_intensity : 'None'}`, cls: '' },
+                    { text: `> Visibility: ${weather.visibility || 'clear'}`, cls: '' },
                     { text: `> Flooding: ${flood.flooding_detected ? 'YES' : 'NO'}`, cls: '' },
-                    { text: `> Water Level: ~${waterCm}cm`, cls: '' },
-                    { text: `> Trend: ${temporal.trend}`, cls: '' },
-                    { text: `> STATUS: ${logistics.zone_status}`, cls: logistics.zone_status === 'FLOODED' ? 'critical' : 'warning' },
+                    { text: `> Water Level: ~${waterCm}cm`, cls: waterCm >= 60 ? 'critical' : waterCm >= 30 ? 'warning' : '' },
+                    { text: `> Reference: ${flood.reference_landmark || 'visual estimation'}`, cls: 'reasoning' },
+                    { text: `> Flood Source: ${flood.flood_source || 'unknown'}`, cls: 'reasoning' },
+                    { text: `> Water Flow: ${temporal.water_movement || 'static'}`, cls: '' },
+                    { text: `> Trend: ${temporal.trend || temporal.trend_observed || 'STABLE'}`, cls: '' },
+                    { text: `> STATUS: ${logistics.zone_status}`, cls: logistics.zone_status === 'FLOODED' ? 'critical' : logistics.zone_status === 'CRITICAL' ? 'warning' : '' },
+                    { text: `> ACTION: ${logistics.action_trigger || 'MONITOR'}`, cls: logistics.action_trigger === 'EVACUATE' ? 'critical' : '' },
                     { text: `> DECISION: DEPLOY ${asset}`, cls: 'highlight' }
                 ];
 

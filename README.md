@@ -2,7 +2,7 @@
 # 🌊 Project Lifeline: Lagos Command Center
 
 ![Project Status](https://img.shields.io/badge/Status-Operational-success)
-![Gemini AI](https://img.shields.io/badge/Powered%20By-Google%20Gemini%202.0-blue)
+![Gemini AI](https://img.shields.io/badge/Powered%20By-Google%20Gemini%203-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 **Project Lifeline** is an autonomous, AI-driven flood response system designed for the Lagos State Government. It transforms fragmented, real-time video surveillance into actionable intelligence, allowing decision-makers to track rising water levels, assess infrastructure risks, and dispatch assets with precision.
@@ -16,7 +16,7 @@ Lagos, a coastal megacity, faces perennial flooding that paralyzes transit and e
 ## 🧠 The Solution
 **Project Lifeline** acts as a central neural nervous system for flood management:
 1.  **See**: Aggregates live feeds from traffic cameras, drones, and crowdsourced mobile uploads.
-2.  **Think**: Uses **Google Gemini 2.0 Flash** (Vision Agent) to analyze water depth, identify submerged assets, and infer flood trends.
+2.  **Think**: Uses **Google Gemini 3 Flash** (Vision Agent) to analyze water depth, identify submerged assets, and infer flood trends.
 3.  **Act**: Automatically recommends the correct asset (Truck, Okada, or Canoe) and visualizes the crisis on a geospatial heatmap.
 
 ## ✨ Key Features
@@ -28,7 +28,7 @@ Lagos, a coastal megacity, faces perennial flooding that paralyzes transit and e
 ---
 
 ## 🛠️ Technology Stack
--   **AI Core**: Google Gemini 2.0 Flash (Multimodal Vision Analysis)
+-   **AI Core**: Google Gemini 3 Flash (Multimodal Vision + Reasoning)
 -   **Backend**: Python (Flask) for API and Agent Orchestration
 -   **Frontend**: HTML5, CSS3, JavaScript (Vanilla), Leaflet.js
 -   **Video Processing**: yt-dlp, FFmpeg

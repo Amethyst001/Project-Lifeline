@@ -36,13 +36,13 @@ class GeminiKeyManager:
         self.lock = threading.Lock()
         self.clients = {}  # Cache clients per key
         
-        # Model configurations
+        # Model configurations - Using Gemini 3 for hackathon
         self.models = {
-            "orchestrator": "gemini-2.5-flash",
-            "vision": "gemini-2.5-flash",
-            "fallback": "gemini-2.0-flash",
-            "creative": "gemini-2.5-flash",
-            "pro": "gemini-2.5-pro"
+            "orchestrator": "gemini-3-flash-preview",
+            "vision": "gemini-3-flash-preview",
+            "fallback": "gemini-3-flash-preview",
+            "creative": "gemini-3-flash-preview",
+            "pro": "gemini-3-pro-preview"
         }
     
     def get_next_key(self) -> Optional[APIKey]:
