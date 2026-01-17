@@ -6,14 +6,16 @@ Connects the Vision Agent to the Dashboard UI.
 from dotenv import load_dotenv
 load_dotenv()
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from vision_agent import VisionAgent
 from hierarchical_analyzer import HierarchicalAnalyzer
 import json
 from pathlib import Path
+import os
 
-app = Flask(__name__)
+# Configure Flask to serve static files from current directory
+app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)  # Allow frontend to call API
 
 # Initialize agents
@@ -43,6 +45,12 @@ ZONE_VIDEOS = {
         "test_videos_merged/third_mainland_water_rises.mp4"
     ]
 }
+
+
+@app.route('/')
+def index():
+    """Serve the main dashboard HTML."""
+    return app.send_static_file('index.html')
 
 
 @app.route('/api/health', methods=['GET'])
