@@ -127,4 +127,9 @@ if __name__ == '__main__':
     print("  GET  /api/analyze/all      - Analyze all zones")
     print("  POST /api/analyze/video    - Analyze custom video")
     print("=" * 50)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    
+    # Use Render's PORT environment variable, fallback to 5000 for local development
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
+
