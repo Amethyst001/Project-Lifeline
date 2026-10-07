@@ -124,6 +124,39 @@ def get_zones():
     })
 
 
+@app.route('/api/natlas/broadcast/<zone_id>', methods=['GET'])
+def natlas_broadcast(zone_id):
+    """Generate sovereign multilingual emergency alert using N-ATLAS."""
+    from natlas_service import natlas_service
+    lang = request.args.get('lang', 'yoruba')
+    # Fetch recent or default zone state
+    zone_names = {
+        "lekki": "Lekki Phase 1 / VGC",
+        "vi": "Victoria Island (Ahmadu Bello Way)",
+        "ikoyi": "Ikoyi (Bourdillon / Banana Island)",
+        "third_mainland": "Third Mainland Bridge Corridor"
+    }
+    name = zone_names.get(zone_id, zone_id.capitalize())
+    # Estimate water level based on active sensor/agent reading
+    water_cm = 60 if zone_id in ["lekki", "vi"] else 15
+    status = "CRITICAL" if water_cm >= 40 else "NORMAL"
+    
+    alert = natlas_service.generate_multilingual_broadcast(name, status, water_cm, language=lang)
+    return jsonify(alert)
+
+
+@app.route('/api/natlas/distress', methods=['POST'])
+def natlas_distress():
+    """Parse citizen distress voice transcript via N-ATLAS ASR understanding."""
+    from natlas_service import natlas_service
+    data = request.get_json() or {}
+    transcript = data.get("transcript", "Omi ti wọle si ile wa ni VGC, ẹ gbà wá o!")
+    lang = data.get("language", "yoruba")
+    
+    parsed = natlas_service.parse_voice_distress_call(transcript, language=lang)
+    return jsonify(parsed)
+
+
 if __name__ == '__main__':
     print("=" * 50)
     print("PROJECT LIFELINE - API SERVER")

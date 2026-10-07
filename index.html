@@ -1123,7 +1123,7 @@
         }
 
         // API Integration
-        const API_BASE = '/api';
+        const API_BASE = window.location.pathname.startsWith('/lifeline') ? '/lifeline/api' : '/api';
         let apiConnected = false;
 
         async function checkApiConnection() {
