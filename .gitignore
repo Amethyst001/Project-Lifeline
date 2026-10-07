@@ -16,3 +16,7 @@ video_archive/
 # OS
 .DS_Store
 Thumbs.db
+
+# Runtime cache
+weather_cache.json
+incidents.json

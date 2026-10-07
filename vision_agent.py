@@ -31,7 +31,7 @@ class VisionAgent:
             
             prompt = self._build_enhanced_prompt(location_id)
             
-            # Use inline data for video
+            # Use inline data for video with high resolution for better detail detection
             response = client.models.generate_content(
                 model=model_name,
                 contents=[
@@ -41,7 +41,10 @@ class VisionAgent:
                             types.Part.from_text(text=prompt)
                         ]
                     )
-                ]
+                ],
+                config=types.GenerateContentConfig(
+                    media_resolution=types.MediaResolution.MEDIA_RESOLUTION_HIGH
+                )
             )
             
             key_manager.mark_success(key)
