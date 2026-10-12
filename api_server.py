@@ -215,7 +215,7 @@ def citizen_report():
     # Dispatch Termii SMS acknowledgment if contact number provided
     sms_receipt = None
     if contact and (contact.startswith("0") or contact.startswith("+") or contact.startswith("234")):
-        sms_msg = f"LIFELINE ACK: {service.upper()} report received for {location}. Unit assigned: {incident_record['assigned_unit']}. Track: https://ktnamethyst.me/lifeline/"
+        sms_msg = f"LIFELINE ACK: {service.upper()} report received for {location}. Unit assigned: {incident_record['assigned_unit']}. Track: https://lifeline.ktnamethyst.me/"
         sms_receipt = broadcast_service.send_sms(contact, sms_msg)
 
     return jsonify({
