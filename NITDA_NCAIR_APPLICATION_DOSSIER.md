@@ -20,16 +20,16 @@
 | **Email** | `ktnifemi@gmail.com` |
 | **Phone** | `+234 706 879 8612` |
 | **Location** | Lagos / Akure, Nigeria |
-| **Live Deployed URL** | [http://amethysttrades.abrdns.com/lifeline/](http://amethysttrades.abrdns.com/lifeline/) |
+| **Live Deployed URL** | [https://ktnamethyst.me/lifeline/](https://ktnamethyst.me/lifeline/) |
 | **GitHub Repository** | `https://github.com/Amethyst001/Project-Lifeline` |
-| **Live N-ATLAS API** | `http://amethysttrades.abrdns.com/lifeline/api/natlas/broadcast/lekki?lang=yoruba` |
+| **Live N-ATLAS API** | `https://ktnamethyst.me/lifeline/api/natlas/broadcast/lekki?lang=yoruba` |
 
 ---
 
 ## 🏛️ The 7 Mandatory Submission Components
 
 ### Component 01: Working Technical Artefact
-* **Deployed Web Application:** Fully functioning, real-time command dashboard accessible publicly at `http://amethysttrades.abrdns.com/lifeline/`.
+* **Deployed Web Application:** Fully functioning, real-time command dashboard accessible publicly at `https://ktnamethyst.me/lifeline/`.
 * **Backend Infrastructure:** Production Linux server on Oracle Cloud running Ubuntu 24.04, Python 3.12, Gunicorn WSGI daemon (`lifeline.service`), and Nginx reverse proxy.
 * **REST API Endpoints:**
   * `GET /api/health` &rarr; System readiness probe.
@@ -97,7 +97,7 @@
 * **0:00 – 0:45 | The Nigerian Problem:**
   * Show real Lagos flood crisis: paralyzing economic hubs (Lekki, VI), trapping commuters, and leaving non-English speaking citizens without real-time guidance.
 * **0:45 – 1:45 | Live Command Center Demo:**
-  * Open `http://amethysttrades.abrdns.com/lifeline/`.
+  * Open `https://ktnamethyst.me/lifeline/`.
   * Click **Lekki Phase 1 / VGC**.
   * Trigger **Live Analysis**: demonstrate spatial vision identifying water depth (`~60cm`) against car doors.
   * Show automatic logistics recommendation (`DEPLOY CANOE`, `ROAD: FAIL`).
@@ -136,7 +136,7 @@
    * **Problem Statement:** *02 Voice-First Access (or 03 Sectoral Fine-Tuning)*
 3. Paste the exact **Problem Statement, Solution Description, and N-ATLAS Integration** text from this dossier.
 4. Provide the live links:
-   * **Live Working Web App:** `http://amethysttrades.abrdns.com/lifeline/`
+   * **Live Working Web App:** `https://ktnamethyst.me/lifeline/`
    * **GitHub Source Code:** `https://github.com/Amethyst001/Project-Lifeline`
 5. Upload your video demo link (Loom or YouTube unlisted).
 6. Submit before **Monday, 12 October 2026, 11:59 PM (WAT)**!
