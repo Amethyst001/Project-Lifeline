@@ -21,6 +21,8 @@ class VisionAgent:
             return {"error": f"Video not found: {video_path}"}
         
         try:
+            if not key_manager:
+                return {"error": "GOOGLE_API_KEY not configured in environment", "source": "config_missing"}
             client, model_name, key = key_manager.get_model("vision")
             
             print(f"[Vision] Uploading video: {Path(video_path).name}...")

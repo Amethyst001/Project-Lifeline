@@ -17,6 +17,9 @@ video_archive/
 .DS_Store
 Thumbs.db
 
-# Runtime cache
+# Runtime cache & SQLite WAL database
 weather_cache.json
 incidents.json
+lifeline.db
+lifeline.db-wal
+lifeline.db-shm

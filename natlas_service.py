@@ -215,33 +215,86 @@ class NATLASService:
 
     def parse_voice_distress_call(self, audio_transcript: str, language: str = "english") -> Dict[str, Any]:
         """
-        Parses citizen voice distress reports to extract hazard type, urgency, and landmarks.
+        Parses citizen voice/text distress reports across Yorùbá, Pidgin, Hausa, Igbo, and English
+        to extract hazard type, urgency, severity, Lagos landmark, and human-scale water depth.
         """
-        lower = audio_transcript.lower()
-        
-        # Hazard detection
+        lower = (audio_transcript or "").lower()
+
+        # Multilingual Hazard Classification (EN / YO / PCM / HA / IG)
         detected_hazard = "flood"
-        if any(w in lower for w in ["fire", "iná", "gobara", "ọkụ", "smoke", "burn", "blaze"]):
+        if any(w in lower for w in ["fire", "iná", "ina ", "gobara", "ọkụ", "oku", "smoke", "burn", "blaze", "explosion", "gas", "transformer"]):
             detected_hazard = "fire"
-        elif any(w in lower for w in ["accident", "bleed", "casualty", "patient", "hospital", "ambulance", "dọkịta"]):
+        elif any(w in lower for w in ["accident", "bleed", "casualty", "patient", "hospital", "ambulance", "dọkịta", "collision", "crash", "fainted", "injured", "hatsari"]):
             detected_hazard = "medical"
-        elif any(w in lower for w in ["gun", "robber", "thief", "armed", "stole", "kidnap", "attack", "ọlọ́pàá"]):
+        elif any(w in lower for w in ["gun", "robber", "robbery", "thief", "armed", "stole", "kidnap", "attack", "ọlọ́pàá", "olopa", "fashi", "ndị ohi", "bandit", "shoot"]):
             detected_hazard = "crime"
-        elif any(w in lower for w in ["bridge", "culvert", "collapse", "sinkhole", "road cut", "pothole"]):
+        elif any(w in lower for w in ["bridge", "culvert", "collapse", "sinkhole", "road cut", "pothole", "pole", "fallen", "gutter", "afárá"]):
             detected_hazard = "infrastructure"
-            
+
+        # Lagos Landmark & Corridor Entity Extraction
+        landmark_aliases = {
+            "admiralty": "Admiralty Way, Lekki Phase 1",
+            "lekki": "Lekki Phase 1",
+            "vgc": "Victoria Garden City (VGC), Lekki",
+            "chevron": "Chevron Drive, Lekki",
+            "ajah": "Ajah Roundabout",
+            "abraham adesanya": "Abraham Adesanya, Ajah",
+            "ahmadu bello": "Ahmadu Bello Way, Victoria Island",
+            "victoria island": "Victoria Island",
+            "ozumba": "Ozumba Mbadiwe, Victoria Island",
+            "ikoyi": "Bourdillon, Ikoyi",
+            "banana island": "Banana Island, Ikoyi",
+            "third mainland": "Third Mainland Bridge",
+            "oworo": "Oworonshoki Interchange",
+            "marina": "Marina, Lagos Island",
+            "eko bridge": "Eko Bridge",
+            "alausa": "Alausa, Ikeja",
+            "ikeja": "Ikeja Central",
+            "ilupeju": "Ilupeju Industrial Estate",
+            "gbagada": "Gbagada Expressway",
+            "yaba": "Yaba Corridor",
+            "surulere": "Surulere",
+            "oshodi": "Oshodi Interchange",
+            "apapa": "Apapa Port Corridor",
+            "ikorodu": "Ikorodu Road"
+        }
+        extracted_location = None
+        for token, canonical in landmark_aliases.items():
+            if token in lower:
+                extracted_location = canonical
+                break
+
+        # Human-Scale Water Depth Estimation (for flood reports)
+        estimated_water_cm = 0
+        if detected_hazard == "flood":
+            if any(w in lower for w in ["chest", "neck", "roof", "submerged", "hood"]):
+                estimated_water_cm = 105
+            elif any(w in lower for w in ["waist", "ìbàdí", "ibadi", "door", "window", "compound", "wọle", "wole", "enter house"]):
+                estimated_water_cm = 70
+            elif any(w in lower for w in ["knee", "orúnkún", "wheel", "tyre", "tire", "bumper"]):
+                estimated_water_cm = 42
+            elif any(w in lower for w in ["ankle", "gutter", "rising"]):
+                estimated_water_cm = 22
+            else:
+                estimated_water_cm = 45
+
         is_urgent = any(w in lower for w in [
-            "urgent", "pàjáwìrì", "gbà wá", "rescue", "trapped", "help", "drown", "dying", "emergency", "help us"
-        ])
-        
+            "urgent", "pàjáwìrì", "gbà wá", "gba wa", "rescue", "trapped", "help",
+            "drown", "dying", "emergency", "fire", "gun", "armed", "collapse", "bleed", "abeg"
+        ]) or estimated_water_cm >= 60
+
+        severity = "CRITICAL" if is_urgent else "WARNING"
+
         return {
             "source_model": self.model_id,
-            "input_language": language,
+            "input_language": LANG_ALIASES.get(language.lower(), language),
             "extracted_transcript": audio_transcript,
             "detected_hazard": detected_hazard,
+            "extracted_location": extracted_location,
+            "estimated_water_cm": estimated_water_cm,
+            "severity": severity,
             "urgency": "HIGH" if is_urgent else "MEDIUM",
-            "dispatch_priority": "PRIORITY_1_RESCUE" if is_urgent else "STANDARD_DISPATCH",
-            "timestamp": "Real-time"
+            "dispatch_priority": "PRIORITY_1_RESCUE" if is_urgent else "STANDARD_DISPATCH"
         }
 
 # Global singleton

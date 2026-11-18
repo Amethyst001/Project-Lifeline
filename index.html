@@ -4,52 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Lifeline | Lagos State Multi-Emergency Command System</title>
-    
-    <!-- Enterprise Typography: Plus Jakarta Sans (Headings), Inter (UI), JetBrains Mono (Telemetry) -->
+    <title>Project Lifeline | Lagos State Multi-Emergency GIS &amp; Command System</title>
+
+    <!-- Enterprise Typography: Plus Jakarta Sans (Headings), Inter (UI), JetBrains Mono (Tabular Telemetry) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Leaflet GIS & Lucide SVG Icons -->
+
+    <!-- Leaflet GIS Engine & Lucide Vector Icons -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         :root {
-            /* Perceptual OKLCH Palette (Playbook Compliant - No Pitch Black) */
-            --bg-base: oklch(0.10 0.015 250);
-            --bg-canvas: oklch(0.13 0.018 252);
-            --bg-card: oklch(0.16 0.020 252);
-            --bg-elevated: oklch(0.20 0.022 254);
-            --bg-hover: oklch(0.24 0.025 255);
-            --bg-active: oklch(0.28 0.028 255);
+            /* Perceptual OKLCH Palette — Deep Obsidian Surfaces (Zero #000000 Pitch Black) */
+            --bg-void: oklch(0.085 0.014 250);
+            --bg-base: oklch(0.105 0.015 250);
+            --bg-canvas: oklch(0.130 0.018 252);
+            --bg-card: oklch(0.160 0.020 252);
+            --bg-elevated: oklch(0.198 0.022 254);
+            --bg-hover: oklch(0.235 0.024 255);
+            --bg-active: oklch(0.270 0.026 255);
 
             /* Hairline Multi-Layer Elevation & Translucent Borders */
-            --border-hairline: oklch(1 0 0 / 0.07);
-            --border-subtle: oklch(1 0 0 / 0.12);
-            --border-strong: oklch(1 0 0 / 0.22);
-            --border-focus: oklch(0.75 0.16 200 / 0.55);
+            --border-hairline: oklch(1 0 0 / 0.075);
+            --border-subtle: oklch(1 0 0 / 0.13);
+            --border-strong: oklch(1 0 0 / 0.24);
+            --border-focus: oklch(0.76 0.14 202 / 0.60);
 
-            --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.40), 0 0 0 1px oklch(1 0 0 / 0.06);
-            --shadow-md: 0 4px 14px -2px oklch(0 0 0 / 0.50), 0 0 0 1px oklch(1 0 0 / 0.06);
-            --shadow-lg: 0 12px 32px -4px oklch(0 0 0 / 0.60), 0 0 0 1px oklch(1 0 0 / 0.07);
+            --shadow-sm: 0 1px 2px oklch(0.05 0.01 250 / 0.45), 0 0 0 1px oklch(1 0 0 / 0.05);
+            --shadow-md: 0 6px 16px -4px oklch(0.05 0.01 250 / 0.55), 0 0 0 1px oklch(1 0 0 / 0.06);
+            --shadow-lg: 0 16px 36px -6px oklch(0.05 0.01 250 / 0.68), 0 0 0 1px oklch(1 0 0 / 0.08);
 
-            /* Operational Emergency Accents (Distinct Perceptual Spaces) */
-            --accent-flood: oklch(0.75 0.15 198);      /* Cyan */
-            --accent-fire: oklch(0.62 0.22 25);        /* Crimson */
-            --accent-medical: oklch(0.65 0.18 290);    /* Violet */
-            --accent-crime: oklch(0.78 0.18 72);       /* Amber */
-            --accent-infra: oklch(0.72 0.17 152);      /* Emerald */
-            --accent-cyan: oklch(0.75 0.15 198);
+            /* Operational Emergency Accents (Perceptual OKLCH) */
+            --accent-flood: oklch(0.76 0.14 202);
+            --accent-fire: oklch(0.63 0.22 25);
+            --accent-medical: oklch(0.69 0.17 292);
+            --accent-crime: oklch(0.79 0.16 74);
+            --accent-infra: oklch(0.73 0.16 154);
+            --accent-cyan: oklch(0.76 0.14 202);
 
-            /* High-Contrast WCAG Compliant Text Lightness */
-            --text-primary: oklch(0.97 0.005 250);
-            --text-secondary: oklch(0.68 0.012 250);
-            --text-muted: oklch(0.48 0.010 250);
+            /* High-Contrast APCA/WCAG Compliant Text Lightness */
+            --text-primary: oklch(0.96 0.005 250);
+            --text-secondary: oklch(0.75 0.012 250);
+            --text-muted: oklch(0.54 0.012 250);
 
-            /* Concentric Radii Geometry: R_inner = R_outer - padding */
+            /* Concentric Radii Geometry: R_inner = R_outer - padding
+               Outer container (12px) with 4px pad -> 8px; with 8px pad -> 4px */
             --radius-outer: 12px;
             --radius-mid: 8px;
             --radius-inner: 4px;
@@ -87,7 +89,7 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Sleek Hairline Scrollbars */
+        /* Custom Hairline Scrollbars */
         ::-webkit-scrollbar {
             width: 4px;
             height: 4px;
@@ -103,7 +105,7 @@
             background: var(--text-muted);
         }
 
-        /* --- SKELETON SHIMMER LOADING STATE --- */
+        /* Skeleton Shimmer Loading State */
         @keyframes shimmer-pulse {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
@@ -111,7 +113,20 @@
         .skeleton-shimmer {
             background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-hover) 50%, var(--bg-card) 75%);
             background-size: 200% 100%;
-            animation: shimmer-pulse 1.6s infinite ease-in-out;
+            animation: shimmer-pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .spin-icon {
+            animation: spin-slow 1s linear infinite;
+        }
+
+        @keyframes card-enter {
+            from { opacity: 0; transform: translate3d(0, 4px, 0); }
+            to { opacity: 1; transform: translate3d(0, 0, 0); }
         }
 
         /* --- COMMAND HEADER (56px) --- */
@@ -122,7 +137,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 1rem;
+            padding: 0 16px;
+            gap: 12px;
             z-index: 1000;
             position: relative;
         }
@@ -130,29 +146,31 @@
         .brand-cluster {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 12px;
+            min-width: 0;
         }
 
         .brand-badge {
             width: 32px;
             height: 32px;
             border-radius: var(--radius-mid);
-            background: oklch(0.75 0.15 198 / 0.12);
-            border: 1px solid oklch(0.75 0.15 198 / 0.28);
+            background: oklch(0.76 0.14 202 / 0.12);
+            border: 1px solid oklch(0.76 0.14 202 / 0.28);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--accent-cyan);
+            flex-shrink: 0;
         }
 
         .brand-title-wrap {
             display: flex;
             flex-direction: column;
-            gap: 1px;
+            gap: 2px;
         }
 
         .brand-title {
-            font-size: 0.92rem;
+            font-size: 0.90rem;
             font-weight: 800;
             letter-spacing: -0.03em;
             color: var(--text-primary);
@@ -164,28 +182,29 @@
         .brand-badge-tag {
             font-size: 0.60rem;
             font-weight: 700;
-            padding: 1px 5px;
+            padding: 1px 6px;
             border-radius: var(--radius-inner);
             background: oklch(1 0 0 / 0.08);
+            border: 1px solid var(--border-hairline);
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.04em;
         }
 
         .brand-sub {
-            font-size: 0.65rem;
+            font-size: 0.64rem;
             font-weight: 500;
             color: var(--text-muted);
-            letter-spacing: 0.02em;
+            white-space: nowrap;
         }
 
-        /* Global Header Language Switcher (Pills EN · YO · HA · IG · PCM) */
+        /* Global 5-Language Switcher (Concentric: 8px outer, 4px pad -> 4px inner) */
         .header-lang-cluster {
             display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
             background: var(--bg-base);
-            padding: 3px;
+            padding: 4px;
             border-radius: var(--radius-mid);
             border: 1px solid var(--border-hairline);
         }
@@ -199,7 +218,7 @@
             padding: 3px 8px;
             border-radius: var(--radius-inner);
             cursor: pointer;
-            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .lang-pill-btn:hover {
             color: var(--text-primary);
@@ -215,15 +234,15 @@
         .lang-pill-btn.active {
             background: var(--bg-card);
             color: var(--accent-cyan);
-            border-color: oklch(0.75 0.15 198 / 0.35);
+            border-color: oklch(0.76 0.14 202 / 0.35);
             box-shadow: var(--shadow-sm);
         }
 
-        /* Telemetry Header KPIs */
+        /* Header Telemetry KPI Strip */
         .telemetry-strip {
             display: flex;
             align-items: center;
-            gap: 1.25rem;
+            gap: 16px;
         }
 
         .telemetry-cell {
@@ -233,7 +252,7 @@
         }
 
         .telemetry-label {
-            font-size: 0.60rem;
+            font-size: 0.58rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -241,7 +260,7 @@
         }
 
         .telemetry-value {
-            font-size: 0.82rem;
+            font-size: 0.80rem;
             font-weight: 600;
             color: var(--text-primary);
             display: flex;
@@ -252,22 +271,23 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 8px;
         }
 
-        /* Enterprise Component States: idle, hover, active, focus-visible, disabled */
+        /* Interactive Buttons — Complete 7-State Coverage */
         .btn {
             font-family: 'Inter', sans-serif;
-            font-size: 0.74rem;
+            font-size: 0.73rem;
             font-weight: 600;
-            padding: 0.45rem 0.85rem;
+            padding: 6px 12px;
             border-radius: var(--radius-mid);
             border: 1px solid transparent;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
-            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            justify-content: center;
+            gap: 6px;
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
             background: transparent;
             color: var(--text-primary);
             white-space: nowrap;
@@ -288,21 +308,28 @@
             pointer-events: none;
         }
 
+        .btn-sm {
+            font-size: 0.66rem;
+            padding: 4px 8px;
+            border-radius: var(--radius-inner);
+            gap: 4px;
+        }
+
         .btn-primary {
             background: var(--accent-cyan);
-            color: oklch(0.10 0.015 250);
+            color: var(--bg-base);
             border-color: transparent;
         }
         .btn-primary:hover {
-            background: oklch(0.80 0.16 198);
+            background: oklch(0.81 0.14 202);
         }
 
         .btn-danger {
             background: var(--accent-fire);
-            color: #ffffff;
+            color: oklch(0.98 0.005 250);
         }
         .btn-danger:hover {
-            background: oklch(0.68 0.23 25);
+            background: oklch(0.68 0.22 25);
         }
 
         .btn-outline {
@@ -315,16 +342,28 @@
         }
 
         .pulse-indicator {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 8px;
+            padding: 5px 10px;
             border-radius: var(--radius-mid);
-            background: oklch(0.72 0.17 152 / 0.12);
-            border: 1px solid oklch(0.72 0.17 152 / 0.25);
-            font-size: 0.68rem;
-            font-weight: 600;
+            background: oklch(0.73 0.16 154 / 0.12);
+            border: 1px solid oklch(0.73 0.16 154 / 0.28);
+            font-size: 0.66rem;
+            font-weight: 700;
             color: var(--accent-infra);
+            cursor: pointer;
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease;
+        }
+        .pulse-indicator:hover {
+            background: oklch(0.73 0.16 154 / 0.20);
+        }
+        .pulse-indicator:active {
+            transform: scale(0.98);
+        }
+        .pulse-indicator:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--border-focus);
         }
 
         .pulse-dot {
@@ -332,7 +371,6 @@
             height: 6px;
             border-radius: 50%;
             background: var(--accent-infra);
-            box-shadow: 0 0 8px var(--accent-infra);
             animation: radar-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
@@ -341,22 +379,22 @@
             50% { opacity: 0.35; transform: scale(0.8); }
         }
 
-        /* --- APP WORKSPACE GRID --- */
+        /* --- WORKSPACE 3-COLUMN GRID --- */
         .workspace {
             display: grid;
-            grid-template-columns: 280px 1fr 400px;
+            grid-template-columns: 304px 1fr 420px;
             height: calc(100vh - 56px);
             width: 100vw;
             position: relative;
             overflow: hidden;
-            transition: grid-template-columns 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: grid-template-columns 0.24s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .workspace.drawer-closed {
-            grid-template-columns: 280px 1fr 0px;
+            grid-template-columns: 304px 1fr 0px;
         }
 
-        /* --- LEFT SERVICE RAIL (280px) --- */
+        /* --- 1. LEFT SERVICE RAIL (304px) --- */
         .service-rail {
             background: var(--bg-canvas);
             border-right: 1px solid var(--border-hairline);
@@ -367,15 +405,16 @@
         }
 
         .rail-header {
-            padding: 0.75rem 0.85rem;
+            padding: 10px 12px;
             border-bottom: 1px solid var(--border-hairline);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 8px;
         }
 
         .rail-title {
-            font-size: 0.68rem;
+            font-size: 0.66rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
@@ -385,12 +424,11 @@
             gap: 6px;
         }
 
-        /* Service Filter Navigation Tabs */
         .service-tabs {
-            padding: 0.5rem;
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
             border-bottom: 1px solid var(--border-hairline);
         }
 
@@ -398,15 +436,15 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.45rem 0.65rem;
+            padding: 6px 10px;
             border-radius: var(--radius-mid);
             background: transparent;
             border: 1px solid transparent;
             color: var(--text-secondary);
-            font-size: 0.74rem;
+            font-size: 0.73rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease, color 0.15s ease;
         }
         .service-tab-btn:hover {
             background: var(--bg-card);
@@ -434,22 +472,94 @@
         .tab-icon-wrap {
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
         }
 
         .tab-counter {
-            font-size: 0.65rem;
-            padding: 1px 5px;
+            font-size: 0.64rem;
+            padding: 1px 6px;
             border-radius: var(--radius-inner);
             background: var(--bg-elevated);
-            color: var(--text-muted);
+            color: var(--text-secondary);
         }
 
-        /* Live Incident Feed Cards */
+        /* Feed Filter & Search Controls */
+        .rail-filter-bar {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-hairline);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: var(--bg-base);
+        }
+
+        .search-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-input-icon {
+            position: absolute;
+            left: 8px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        .rail-search-input {
+            width: 100%;
+            background: var(--bg-canvas);
+            border: 1px solid var(--border-hairline);
+            border-radius: var(--radius-inner);
+            padding: 5px 8px 5px 26px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72rem;
+            transition: border-color 0.15s ease;
+        }
+        .rail-search-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 2px var(--border-focus);
+        }
+
+        .status-filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+        }
+
+        .status-seg-group {
+            display: flex;
+            gap: 2px;
+            background: var(--bg-canvas);
+            padding: 2px;
+            border-radius: var(--radius-inner);
+            border: 1px solid var(--border-hairline);
+        }
+
+        .status-seg-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.62rem;
+            font-weight: 600;
+            padding: 3px 7px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .status-seg-btn:hover { color: var(--text-primary); }
+        .status-seg-btn:focus-visible { outline: 2px solid var(--border-focus); }
+        .status-seg-btn.active {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        /* Incident Feed Cards */
         .feed-container {
             flex: 1;
             overflow-y: auto;
-            padding: 0.5rem;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -459,15 +569,15 @@
             background: var(--bg-card);
             border: 1px solid var(--border-hairline);
             border-radius: var(--radius-mid);
-            padding: 0.65rem 0.75rem;
+            padding: 8px 10px;
             cursor: pointer;
-            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease, border-color 0.15s ease;
+            animation: card-enter 0.22s cubic-bezier(0.16, 1, 0.3, 1) backwards;
         }
         .incident-card:hover {
             background: var(--bg-elevated);
             border-color: var(--border-subtle);
-            transform: translateY(-1px);
+            transform: translate3d(0, -1px, 0);
         }
         .incident-card:active {
             transform: scale(0.98);
@@ -477,8 +587,9 @@
             box-shadow: 0 0 0 2px var(--border-focus);
         }
         .incident-card.selected {
-            border-color: var(--border-focus);
-            box-shadow: 0 0 0 1px var(--border-focus);
+            border-color: var(--accent-cyan);
+            background: var(--bg-elevated);
+            box-shadow: 0 0 0 1px oklch(0.76 0.14 202 / 0.35);
         }
 
         .card-top {
@@ -486,10 +597,11 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 4px;
+            gap: 6px;
         }
 
         .card-badge {
-            font-size: 0.60rem;
+            font-size: 0.58rem;
             font-weight: 700;
             padding: 1px 5px;
             border-radius: var(--radius-inner);
@@ -497,40 +609,51 @@
             letter-spacing: 0.04em;
         }
         .badge-critical {
-            background: oklch(0.62 0.22 25 / 0.15);
+            background: oklch(0.63 0.22 25 / 0.16);
             color: var(--accent-fire);
-            border: 1px solid oklch(0.62 0.22 25 / 0.35);
+            border: 1px solid oklch(0.63 0.22 25 / 0.35);
         }
         .badge-warning {
-            background: oklch(0.78 0.18 72 / 0.15);
+            background: oklch(0.79 0.16 74 / 0.16);
             color: var(--accent-crime);
-            border: 1px solid oklch(0.78 0.18 72 / 0.35);
+            border: 1px solid oklch(0.79 0.16 74 / 0.35);
         }
         .badge-normal {
-            background: oklch(0.72 0.17 152 / 0.15);
+            background: oklch(0.73 0.16 154 / 0.16);
             color: var(--accent-infra);
-            border: 1px solid oklch(0.72 0.17 152 / 0.35);
+            border: 1px solid oklch(0.73 0.16 154 / 0.35);
+        }
+
+        .status-chip {
+            font-size: 0.56rem;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: var(--radius-inner);
+            background: var(--bg-base);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-hairline);
+            text-transform: uppercase;
         }
 
         .card-title {
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             font-weight: 600;
             color: var(--text-primary);
             line-height: 1.35;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .card-meta {
-            font-size: 0.65rem;
+            font-size: 0.63rem;
             color: var(--text-muted);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 6px;
         }
 
-        /* Actionable Empty State */
         .empty-state-box {
-            padding: 2rem 1rem;
+            padding: 28px 16px;
             text-align: center;
             color: var(--text-muted);
             display: flex;
@@ -538,58 +661,82 @@
             align-items: center;
             gap: 8px;
         }
-        .empty-state-icon {
-            color: var(--text-muted);
-            opacity: 0.6;
-        }
-        .empty-state-text {
-            font-size: 0.74rem;
-            font-weight: 500;
+
+        .error-state-box {
+            padding: 16px;
+            border-radius: var(--radius-mid);
+            background: oklch(0.63 0.22 25 / 0.10);
+            border: 1px solid oklch(0.63 0.22 25 / 0.30);
+            color: var(--text-primary);
+            font-size: 0.72rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        /* --- CENTER MAP VIEWPORT --- */
+        /* --- 2. CENTER GIS MAP VIEWPORT --- */
         .map-stage {
             height: 100%;
             width: 100%;
             position: relative;
-            background: oklch(0.10 0.015 250);
+            background: var(--bg-base);
         }
 
         #map {
             height: 100%;
             width: 100%;
-            background: oklch(0.10 0.015 250);
+            background: var(--bg-base);
         }
 
-        /* Map Controls Floating Overlay */
+        #map.probe-cursor,
+        #map.pin-cursor {
+            cursor: crosshair !important;
+        }
+
+        /* Floating Map Bars (Concentric: 12px outer, 4px pad -> 8px inner) */
         .map-controls-floating {
             position: absolute;
-            top: 0.85rem;
-            left: 0.85rem;
+            top: 12px;
+            left: 12px;
             z-index: 500;
-            background: oklch(0.13 0.018 252 / 0.90);
+            background: oklch(0.13 0.018 252 / 0.92);
             backdrop-filter: blur(12px);
-            border: 1px solid var(--border-hairline);
-            border-radius: var(--radius-mid);
-            padding: 3px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-outer);
+            padding: 4px;
             display: flex;
-            gap: 3px;
+            gap: 2px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .map-overlays-floating {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 500;
+            background: oklch(0.13 0.018 252 / 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-outer);
+            padding: 4px;
+            display: flex;
+            gap: 2px;
             box-shadow: var(--shadow-md);
         }
 
         .map-btn {
             background: transparent;
-            border: none;
+            border: 1px solid transparent;
             color: var(--text-secondary);
-            font-size: 0.70rem;
+            font-size: 0.68rem;
             font-weight: 600;
             padding: 5px 9px;
-            border-radius: var(--radius-inner);
+            border-radius: var(--radius-mid);
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 5px;
-            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease, color 0.15s ease;
         }
         .map-btn:hover {
             color: var(--text-primary);
@@ -598,54 +745,113 @@
         .map-btn:active {
             transform: scale(0.98);
         }
+        .map-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--border-focus);
+        }
         .map-btn.active {
             background: var(--bg-card);
             color: var(--accent-cyan);
-            border: 1px solid oklch(0.75 0.15 198 / 0.3);
+            border-color: oklch(0.76 0.14 202 / 0.35);
+        }
+        .map-btn.probe-active {
+            background: oklch(0.79 0.16 74 / 0.18);
+            color: var(--accent-crime);
+            border-color: oklch(0.79 0.16 74 / 0.45);
         }
 
-        /* Floating Weather & Hydrology Strip (Open-Meteo) */
+        /* Active Mode Banner on Map */
+        .map-mode-pill {
+            position: absolute;
+            top: 56px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 520;
+            background: oklch(0.15 0.02 252 / 0.95);
+            border: 1px solid var(--accent-crime);
+            border-radius: var(--radius-mid);
+            padding: 6px 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: none;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-md);
+        }
+        .map-mode-pill.visible {
+            display: inline-flex;
+        }
+
+        /* Floating Hydrology & Weather Banner */
         .weather-banner {
             position: absolute;
-            bottom: 1rem;
-            left: 1rem;
+            bottom: 12px;
+            left: 12px;
             z-index: 500;
             background: oklch(0.13 0.018 252 / 0.92);
             backdrop-filter: blur(14px);
-            border: 1px solid var(--border-hairline);
-            border-radius: var(--radius-mid);
-            padding: 0.55rem 0.85rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-outer);
+            padding: 8px 12px;
             display: flex;
             align-items: center;
-            gap: 1.25rem;
+            gap: 16px;
             box-shadow: var(--shadow-md);
         }
 
         .weather-stat {
             display: flex;
             align-items: center;
-            gap: 7px;
-        }
-        .weather-stat-icon {
-            color: var(--accent-cyan);
+            gap: 8px;
         }
         .weather-stat-info {
             display: flex;
             flex-direction: column;
         }
         .weather-stat-lbl {
-            font-size: 0.58rem;
+            font-size: 0.56rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.04em;
             color: var(--text-muted);
         }
         .weather-stat-val {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             font-weight: 700;
             color: var(--text-primary);
         }
 
-        /* --- RIGHT SLIDE-OVER INSPECTION DRAWER (400px) --- */
+        /* Map Legend (Bottom Right) */
+        .map-legend {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            z-index: 500;
+            background: oklch(0.13 0.018 252 / 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-hairline);
+            border-radius: var(--radius-mid);
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.62rem;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-sm);
+        }
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-line {
+            width: 14px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        /* --- 3. RIGHT INSPECTOR & GIS ROUTING DRAWER (420px) --- */
         .inspector-drawer {
             background: var(--bg-canvas);
             border-left: 1px solid var(--border-hairline);
@@ -657,70 +863,218 @@
         }
 
         .drawer-header {
-            padding: 0.85rem 1rem;
+            padding: 12px 14px;
             border-bottom: 1px solid var(--border-hairline);
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 8px;
             background: var(--bg-card);
+        }
+
+        .drawer-header-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
         }
 
         .drawer-title-group {
             display: flex;
             flex-direction: column;
             gap: 2px;
-            overflow: hidden;
+            min-width: 0;
         }
 
         .drawer-title {
-            font-size: 0.85rem;
+            font-size: 0.86rem;
             font-weight: 700;
             color: var(--text-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
+        /* Incident Lifecycle Stepper (8px outer, 4px pad -> 4px inner) */
+        .lifecycle-stepper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            background: var(--bg-base);
+            padding: 4px;
+            border-radius: var(--radius-mid);
+            border: 1px solid var(--border-hairline);
+        }
+
+        .step-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-size: 0.60rem;
+            font-weight: 700;
+            padding: 4px 2px;
+            border-radius: var(--radius-inner);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .step-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+        .step-btn:active {
+            transform: scale(0.98);
+        }
+        .step-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--border-focus);
+        }
+        .step-btn.active {
+            background: var(--bg-elevated);
+            color: var(--accent-cyan);
+            border-color: oklch(0.76 0.14 202 / 0.35);
+        }
+
         .drawer-body {
             flex: 1;
             overflow-y: auto;
-            padding: 0.85rem;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 10px;
         }
 
-        /* Concentric Panels: Outer radius 12px -> padding 12px -> inner elements */
+        /* Concentric Panels: 12px outer radius, 8px padding -> 4px inner radius */
         .drawer-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-hairline);
             border-radius: var(--radius-outer);
-            padding: 0.75rem;
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 0.55rem;
+            gap: 8px;
         }
 
         .panel-heading {
-            font-size: 0.65rem;
+            font-size: 0.64rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 2px;
         }
 
-        .video-box {
-            border-radius: var(--radius-mid);
-            overflow: hidden;
-            background: #000;
+        .panel-heading-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 4-Cell GIS Telemetry Grid */
+        .gis-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+        }
+
+        .metric-cell {
+            background: var(--bg-base);
             border: 1px solid var(--border-hairline);
-            height: 160px;
+            border-radius: var(--radius-inner);
+            padding: 6px 4px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .metric-cell-val {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .metric-cell-lbl {
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Route Telemetry Box */
+        .route-summary-box {
+            background: var(--bg-base);
+            border: 1px solid var(--border-hairline);
+            border-radius: var(--radius-inner);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .route-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.70rem;
+            gap: 8px;
+        }
+
+        .detour-banner {
+            padding: 5px 8px;
+            border-radius: var(--radius-inner);
+            font-size: 0.65rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .detour-banner.avoided {
+            background: oklch(0.79 0.16 74 / 0.14);
+            border: 1px solid oklch(0.79 0.16 74 / 0.35);
+            color: var(--accent-crime);
+        }
+        .detour-banner.clear {
+            background: oklch(0.73 0.16 154 / 0.12);
+            border: 1px solid oklch(0.73 0.16 154 / 0.28);
+            color: var(--accent-infra);
+        }
+
+        .steps-list {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 140px;
+            overflow-y: auto;
+            border-top: 1px solid var(--border-hairline);
+            padding-top: 6px;
+        }
+        .steps-list.expanded {
+            display: flex;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            padding: 3px 4px;
+            border-radius: 3px;
+            background: var(--bg-canvas);
+        }
+
+        /* Video Reconnaissance Box */
+        .video-box {
+            border-radius: var(--radius-inner);
+            overflow: hidden;
+            background: var(--bg-void);
+            border: 1px solid var(--border-hairline);
+            height: 148px;
             position: relative;
         }
         .video-box video {
@@ -729,69 +1083,65 @@
             object-fit: cover;
         }
 
-        /* 3-Cell Metric Grid */
-        .metrics-grid {
+        .metrics-grid-3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 0.45rem;
+            gap: 4px;
         }
 
-        .metric-cell {
-            background: var(--bg-base);
-            border: 1px solid var(--border-hairline);
-            border-radius: var(--radius-mid);
-            padding: 0.45rem 0.35rem;
-            text-align: center;
-        }
-
-        .metric-cell-val {
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .metric-cell-lbl {
-            font-size: 0.58rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        /* AI Reasoning Console */
+        /* AI & Audit Console */
         .reasoning-box {
-            background: var(--bg-base);
+            background: var(--bg-void);
             border: 1px solid var(--border-hairline);
-            border-radius: var(--radius-mid);
-            padding: 0.6rem;
+            border-radius: var(--radius-inner);
+            padding: 8px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.66rem;
+            font-size: 0.64rem;
             line-height: 1.45;
             color: var(--text-secondary);
-            min-height: 80px;
-            max-height: 120px;
+            min-height: 68px;
+            max-height: 116px;
             overflow-y: auto;
         }
 
         /* Sovereign N-ATLAS Dispatcher */
         .natlas-container {
-            background: oklch(0.65 0.18 290 / 0.06);
-            border: 1px solid oklch(0.65 0.18 290 / 0.22);
+            background: oklch(0.69 0.17 292 / 0.07);
+            border: 1px solid oklch(0.69 0.17 292 / 0.24);
             border-radius: var(--radius-outer);
-            padding: 0.75rem;
+            padding: 8px;
             display: flex;
             flex-direction: column;
-            gap: 0.55rem;
+            gap: 8px;
         }
 
         .broadcast-card {
             background: var(--bg-base);
             border: 1px solid var(--border-hairline);
-            border-radius: var(--radius-mid);
-            padding: 0.65rem;
+            border-radius: var(--radius-inner);
+            padding: 8px;
             font-size: 0.72rem;
             line-height: 1.45;
             color: var(--text-primary);
             min-height: 52px;
+        }
+
+        .sms-target-row {
+            display: flex;
+            gap: 6px;
+        }
+        .sms-phone-input {
+            flex: 1;
+            background: var(--bg-base);
+            border: 1px solid var(--border-hairline);
+            border-radius: var(--radius-inner);
+            padding: 5px 8px;
+            color: var(--text-primary);
+            font-size: 0.70rem;
+        }
+        .sms-phone-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
         }
 
         .broadcast-actions {
@@ -799,25 +1149,51 @@
             gap: 6px;
         }
 
+        /* Timeline Log */
+        .timeline-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+        .timeline-row {
+            background: var(--bg-base);
+            border: 1px solid var(--border-hairline);
+            border-radius: var(--radius-inner);
+            padding: 5px 7px;
+            font-size: 0.63rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .timeline-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.58rem;
+            color: var(--text-muted);
+        }
+
         .drawer-footer {
-            padding: 0.75rem 0.85rem;
+            padding: 10px 12px;
             border-top: 1px solid var(--border-hairline);
             background: var(--bg-card);
             display: flex;
-            gap: 6px;
+            gap: 8px;
         }
 
-        /* --- CITIZEN REPORT MODAL --- */
+        /* --- MODALS --- */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.75);
+            background: oklch(0.06 0.01 250 / 0.78);
             backdrop-filter: blur(8px);
             z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 16px;
         }
         .modal-overlay.active {
             display: flex;
@@ -828,13 +1204,13 @@
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-outer);
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             overflow: hidden;
             box-shadow: var(--shadow-lg);
         }
 
         .modal-header {
-            padding: 0.85rem 1.15rem;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--border-hairline);
             display: flex;
             align-items: center;
@@ -843,10 +1219,12 @@
         }
 
         .modal-body {
-            padding: 1.15rem;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
+            gap: 12px;
+            max-height: 82vh;
+            overflow-y: auto;
         }
 
         .form-group {
@@ -855,9 +1233,16 @@
             gap: 4px;
         }
 
+        .form-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
         .form-label {
-            font-size: 0.68rem;
-            font-weight: 600;
+            font-size: 0.66rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             color: var(--text-secondary);
@@ -866,12 +1251,12 @@
         .form-input, .form-select, .form-textarea {
             background: var(--bg-base);
             border: 1px solid var(--border-hairline);
-            border-radius: var(--radius-mid);
-            padding: 0.5rem 0.65rem;
+            border-radius: var(--radius-inner);
+            padding: 7px 10px;
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
-            font-size: 0.78rem;
-            transition: border-color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 0.76rem;
+            transition: border-color 0.15s ease;
         }
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
@@ -881,18 +1266,60 @@
 
         .form-textarea {
             resize: vertical;
-            min-height: 64px;
+            min-height: 68px;
         }
 
-        /* Custom Leaflet Tooltip & Marker Styles */
+        /* --- NON-BLOCKING TOAST NOTIFICATION STACK --- */
+        .toast-stack {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 360px;
+            pointer-events: none;
+        }
+
+        .toast-item {
+            pointer-events: auto;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-mid);
+            padding: 10px 12px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            animation: card-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .toast-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .toast-title {
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .toast-msg {
+            font-size: 0.67rem;
+            color: var(--text-secondary);
+            line-height: 1.35;
+        }
+
+        /* Leaflet Custom Styling */
         .leaflet-tooltip {
-            background: oklch(0.13 0.018 252 / 0.95);
+            background: oklch(0.13 0.018 252 / 0.96);
             backdrop-filter: blur(8px);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-inner);
-            padding: 4px 8px;
+            padding: 5px 8px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.72rem;
+            font-size: 0.70rem;
             font-weight: 600;
             color: var(--text-primary);
             box-shadow: var(--shadow-sm);
@@ -907,7 +1334,7 @@
             transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .custom-map-icon:hover {
-            transform: scale(1.15);
+            transform: scale(1.16);
         }
     </style>
 </head>
@@ -920,13 +1347,13 @@
             <div class="brand-title-wrap">
                 <div class="brand-title">
                     <span>PROJECT LIFELINE</span>
-                    <span class="brand-badge-tag">Lagos ESC</span>
+                    <span class="brand-badge-tag">Lagos ESC · GIS</span>
                 </div>
-                <span class="brand-sub">Unified Emergency Services Mesh • LASEMA · LAFIRE · LASAMBUS · RRS</span>
+                <span class="brand-sub">Spatial Command Mesh · CARTO · Copernicus DEM · OSRM · N-ATLAS</span>
             </div>
         </div>
 
-        <!-- 5-Language Global Switcher (EN · YO · HA · IG · PCM) -->
+        <!-- 5-Language Sovereign Switcher -->
         <nav class="header-lang-cluster" aria-label="Sovereign N-ATLAS Language Selection">
             <button class="lang-pill-btn active" onclick="setGlobalLang('english', this)">EN</button>
             <button class="lang-pill-btn" onclick="setGlobalLang('yoruba', this)">YO</button>
@@ -935,212 +1362,352 @@
             <button class="lang-pill-btn" onclick="setGlobalLang('igbo', this)">IG</button>
         </nav>
 
-        <!-- Command Telemetry KPI Strip -->
+        <!-- Real-Time Command Telemetry Strip -->
         <div class="telemetry-strip">
             <div class="telemetry-cell">
                 <span class="telemetry-label">Active Incidents</span>
-                <span class="telemetry-value tabular-nums" id="kpiActiveIncidents">5 Active</span>
+                <span class="telemetry-value tabular-nums" id="kpiActiveIncidents">--</span>
             </div>
             <div class="telemetry-cell">
                 <span class="telemetry-label">Critical Sectors</span>
-                <span class="telemetry-value tabular-nums" style="color: var(--accent-fire);" id="kpiCritical">3 Critical</span>
+                <span class="telemetry-value tabular-nums" style="color: var(--accent-fire);" id="kpiCritical">--</span>
+            </div>
+            <div class="telemetry-cell">
+                <span class="telemetry-label">Mean Road ETA</span>
+                <span class="telemetry-value tabular-nums" style="color: var(--accent-cyan);" id="kpiAvgEta">-- min</span>
             </div>
             <div class="telemetry-cell">
                 <span class="telemetry-label">Lagos Rainfall</span>
-                <span class="telemetry-value tabular-nums" id="kpiRainfall">0.0 mm/h</span>
+                <span class="telemetry-value tabular-nums" id="kpiRainfall">-- mm/h</span>
             </div>
             <div class="telemetry-cell">
                 <span class="telemetry-label">Atlantic Surge</span>
-                <span class="telemetry-value tabular-nums" style="color: var(--accent-crime);" id="kpiTide">+0.58m</span>
+                <span class="telemetry-value tabular-nums" style="color: var(--accent-crime);" id="kpiTide">--</span>
             </div>
             <div class="telemetry-cell">
                 <span class="telemetry-label">Command Clock</span>
-                <span class="telemetry-value tabular-nums" id="clockDisplay">12:00:00 WAT</span>
+                <span class="telemetry-value tabular-nums" id="clockDisplay">--:--:-- WAT</span>
             </div>
         </div>
 
         <div class="header-actions">
-            <div class="pulse-indicator">
-                <div class="pulse-dot"></div>
-                <span id="systemMeshStatus">AUTONOMOUS MESH ONLINE</span>
-            </div>
+            <button class="pulse-indicator" onclick="openDiagnosticsModal()" title="View GIS &amp; Subsystem Diagnostics">
+                <span class="pulse-dot"></span>
+                <span id="systemMeshStatus">GIS MESH LIVE</span>
+            </button>
             <button class="btn btn-danger" onclick="openReportModal()">
                 <i data-lucide="plus-circle" style="width:14px;height:14px;"></i> Report Incident
             </button>
-            <button class="btn btn-outline" onclick="toggleDrawer()" title="Toggle Inspector Drawer">
+            <button class="btn btn-outline" onclick="toggleDrawer()" title="Toggle Inspector Drawer" aria-label="Toggle Inspector Drawer">
                 <i data-lucide="panel-right" style="width:14px;height:14px;"></i>
             </button>
         </div>
     </header>
 
-    <!-- Main Workspace Grid -->
+    <!-- Main 3-Column Workspace -->
     <main class="workspace" id="workspaceContainer">
-        <!-- 1. Left Service Rail (280px) -->
+        <!-- 1. Left Service & Incident Rail (304px) -->
         <aside class="service-rail">
             <div class="rail-header">
-                <span class="rail-title"><i data-lucide="layers" style="width:14px;height:14px;"></i> Emergency Service</span>
-                <span class="tabular-nums" style="font-size:0.62rem; color:var(--text-muted);" id="railTotalCount">5 Total</span>
+                <span class="rail-title"><i data-lucide="layers" style="width:13px;height:13px;"></i> Emergency Modules</span>
+                <span class="tabular-nums" style="font-size:0.62rem; color:var(--text-muted);" id="railTotalCount">-- Active</span>
             </div>
 
-            <!-- Service Tabs Filter -->
             <nav class="service-tabs" aria-label="Service Module Filter">
                 <button class="service-tab-btn active all" onclick="setServiceFilter('all', this)">
                     <span class="tab-icon-wrap"><i data-lucide="layout-grid" style="width:14px;height:14px;"></i> All Hazards</span>
-                    <span class="tab-counter tabular-nums" id="cntAll">5</span>
+                    <span class="tab-counter tabular-nums" id="cntAll">0</span>
                 </button>
                 <button class="service-tab-btn flood" onclick="setServiceFilter('flood', this)">
-                    <span class="tab-icon-wrap"><i data-lucide="waves" style="width:14px;height:14px; color:var(--accent-flood);"></i> Flood & Hydrology</span>
-                    <span class="tab-counter tabular-nums" id="cntFlood">1</span>
+                    <span class="tab-icon-wrap"><i data-lucide="waves" style="width:14px;height:14px; color:var(--accent-flood);"></i> Flood &amp; Hydrology</span>
+                    <span class="tab-counter tabular-nums" id="cntFlood">0</span>
                 </button>
                 <button class="service-tab-btn fire" onclick="setServiceFilter('fire', this)">
-                    <span class="tab-icon-wrap"><i data-lucide="flame" style="width:14px;height:14px; color:var(--accent-fire);"></i> Fire & Rescue (LAFIRE)</span>
-                    <span class="tab-counter tabular-nums" id="cntFire">1</span>
+                    <span class="tab-icon-wrap"><i data-lucide="flame" style="width:14px;height:14px; color:var(--accent-fire);"></i> Fire &amp; Rescue (LAFIRE)</span>
+                    <span class="tab-counter tabular-nums" id="cntFire">0</span>
                 </button>
                 <button class="service-tab-btn medical" onclick="setServiceFilter('medical', this)">
                     <span class="tab-icon-wrap"><i data-lucide="heart-pulse" style="width:14px;height:14px; color:var(--accent-medical);"></i> Medical / Trauma (LASAMBUS)</span>
-                    <span class="tab-counter tabular-nums" id="cntMedical">1</span>
+                    <span class="tab-counter tabular-nums" id="cntMedical">0</span>
                 </button>
                 <button class="service-tab-btn crime" onclick="setServiceFilter('crime', this)">
-                    <span class="tab-icon-wrap"><i data-lucide="shield" style="width:14px;height:14px; color:var(--accent-crime);"></i> Police & Security (RRS)</span>
-                    <span class="tab-counter tabular-nums" id="cntCrime">1</span>
+                    <span class="tab-icon-wrap"><i data-lucide="shield" style="width:14px;height:14px; color:var(--accent-crime);"></i> Police &amp; Security (RRS)</span>
+                    <span class="tab-counter tabular-nums" id="cntCrime">0</span>
                 </button>
                 <button class="service-tab-btn infrastructure" onclick="setServiceFilter('infrastructure', this)">
-                    <span class="tab-icon-wrap"><i data-lucide="construction" style="width:14px;height:14px; color:var(--accent-infra);"></i> Infrastructure & Roads</span>
-                    <span class="tab-counter tabular-nums" id="cntInfra">1</span>
+                    <span class="tab-icon-wrap"><i data-lucide="construction" style="width:14px;height:14px; color:var(--accent-infra);"></i> Infrastructure &amp; Roads</span>
+                    <span class="tab-counter tabular-nums" id="cntInfra">0</span>
                 </button>
             </nav>
 
-            <div class="rail-header" style="background:var(--bg-canvas);">
-                <span class="rail-title"><i data-lucide="activity" style="width:14px;height:14px;"></i> Live Operational Feed</span>
-                <span class="tabular-nums" style="font-size:0.62rem; color:var(--text-muted);">Real-Time</span>
+            <!-- Search, Status Filter & GIS Export Bar -->
+            <div class="rail-filter-bar">
+                <div class="search-input-wrap">
+                    <i data-lucide="search" class="search-input-icon" style="width:13px;height:13px;"></i>
+                    <input type="search" class="rail-search-input" id="incidentSearchInput" placeholder="Filter street, landmark, or ID..." oninput="debouncedSearchIncidents()">
+                </div>
+                <div class="status-filter-row">
+                    <div class="status-seg-group" role="group" aria-label="Incident Status Filter">
+                        <button class="status-seg-btn active" onclick="setStatusFilter('ACTIVE_ONLY', this)">Active</button>
+                        <button class="status-seg-btn" onclick="setStatusFilter('all', this)">All</button>
+                        <button class="status-seg-btn" onclick="setStatusFilter('RESOLVED', this)">Resolved</button>
+                    </div>
+                    <div style="display:flex; gap:4px;">
+                        <button class="btn btn-outline btn-sm" onclick="exportIncidents('geojson')" title="Export GeoJSON for CARTO / QGIS">
+                            <i data-lucide="map" style="width:11px;height:11px;"></i> GeoJSON
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="exportIncidents('csv')" title="Export Operational CSV">
+                            <i data-lucide="download" style="width:11px;height:11px;"></i> CSV
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Incident Feed Cards -->
             <div class="feed-container" id="incidentFeed">
-                <!-- Dynamically Rendered -->
+                <!-- Skeleton loading cards rendered on boot -->
+                <div class="incident-card skeleton-shimmer" style="height:72px;"></div>
+                <div class="incident-card skeleton-shimmer" style="height:72px;"></div>
+                <div class="incident-card skeleton-shimmer" style="height:72px;"></div>
             </div>
         </aside>
 
-        <!-- 2. Interactive Center Map Viewport -->
+        <!-- 2. Interactive Center GIS Map Viewport -->
         <section class="map-stage">
-            <!-- Map Layer Toggle -->
-            <div class="map-controls-floating">
-                <button class="map-btn active" id="btnTacticalMap" onclick="switchBasemap('dark')">
-                    <i data-lucide="layers" style="width:13px;height:13px;"></i> Tactical Dark
+            <!-- Top-Left: Basemap Switcher (CARTO / Esri / Satellite / Topo) -->
+            <div class="map-controls-floating" role="toolbar" aria-label="GIS Basemap Layers">
+                <button class="map-btn active" id="bmCartoDark" onclick="switchBasemap('carto_dark')">
+                    <i data-lucide="compass" style="width:13px;height:13px;"></i> CARTO Dark
                 </button>
-                <button class="map-btn" id="btnSatelliteMap" onclick="switchBasemap('satellite')">
-                    <i data-lucide="satellite" style="width:13px;height:13px;"></i> Satellite Recon
+                <button class="map-btn" id="bmEsriDark" onclick="switchBasemap('esri_dark')">
+                    <i data-lucide="layers" style="width:13px;height:13px;"></i> Tactical
+                </button>
+                <button class="map-btn" id="bmSatellite" onclick="switchBasemap('satellite')">
+                    <i data-lucide="satellite" style="width:13px;height:13px;"></i> Satellite
+                </button>
+                <button class="map-btn" id="bmTopo" onclick="switchBasemap('topo')">
+                    <i data-lucide="mountain" style="width:13px;height:13px;"></i> DEM Topo
                 </button>
             </div>
 
-            <!-- Map Leaflet Container -->
+            <!-- Top-Right: GIS Spatial Analytics & Routing Overlays -->
+            <div class="map-overlays-floating" role="toolbar" aria-label="Spatial Analytics Overlays">
+                <button class="map-btn" id="btnProbeTool" onclick="toggleSpatialProbeMode()" title="Click anywhere on map to inspect Copernicus DEM elevation, runoff vector, 1km population exposure &amp; nearest responder route">
+                    <i data-lucide="crosshair" style="width:13px;height:13px;"></i> Spatial Probe
+                </button>
+                <button class="map-btn active" id="btnToggleRouteLayer" onclick="toggleOverlay('route')">
+                    <i data-lucide="route" style="width:13px;height:13px;"></i> Dispatch Route
+                </button>
+                <button class="map-btn active" id="btnToggleRunoffLayer" onclick="toggleOverlay('runoff')">
+                    <i data-lucide="waves" style="width:13px;height:13px;"></i> Runoff Vectors
+                </button>
+                <button class="map-btn" id="btnToggleCoverageLayer" onclick="toggleOverlay('coverage')">
+                    <i data-lucide="radar" style="width:13px;height:13px;"></i> 2.5km Coverage
+                </button>
+            </div>
+
+            <!-- Active Map Mode Pill -->
+            <div class="map-mode-pill" id="mapModePill">
+                <i data-lucide="crosshair" style="width:14px;height:14px; color:var(--accent-crime);"></i>
+                <span id="mapModeText">Spatial Probe Active — Click any point in Lagos to analyze terrain, exposure &amp; routing</span>
+                <button class="btn btn-outline btn-sm" onclick="cancelMapInteractiveMode()">Exit</button>
+            </div>
+
+            <!-- Leaflet Map Container -->
             <div id="map"></div>
 
-            <!-- Floating Hydrology & Weather Banner (Open-Meteo) -->
+            <!-- Bottom-Left: Live Open-Meteo Hydrology & Weather Strip -->
             <div class="weather-banner">
                 <div class="weather-stat">
-                    <div class="weather-stat-icon"><i data-lucide="cloud-rain" style="width:16px;height:16px;"></i></div>
+                    <i data-lucide="cloud-rain" style="width:16px;height:16px; color:var(--accent-cyan);"></i>
                     <div class="weather-stat-info">
-                        <span class="weather-stat-lbl">Open-Meteo Weather</span>
-                        <span class="weather-stat-val" id="weatherDesc">Overcast</span>
+                        <span class="weather-stat-lbl">Open-Meteo Live</span>
+                        <span class="weather-stat-val" id="weatherDesc">Syncing...</span>
                     </div>
                 </div>
                 <div class="weather-stat">
-                    <div class="weather-stat-icon" style="color:var(--accent-infra);"><i data-lucide="thermometer" style="width:16px;height:16px;"></i></div>
+                    <i data-lucide="thermometer" style="width:16px;height:16px; color:var(--accent-infra);"></i>
                     <div class="weather-stat-info">
                         <span class="weather-stat-lbl">Temperature</span>
-                        <span class="weather-stat-val tabular-nums" id="weatherTemp">28.4°C</span>
+                        <span class="weather-stat-val tabular-nums" id="weatherTemp">--°C</span>
                     </div>
                 </div>
                 <div class="weather-stat">
-                    <div class="weather-stat-icon" style="color:var(--accent-crime);"><i data-lucide="wind" style="width:16px;height:16px;"></i></div>
+                    <i data-lucide="wind" style="width:16px;height:16px; color:var(--accent-crime);"></i>
                     <div class="weather-stat-info">
                         <span class="weather-stat-lbl">Coastal Wind</span>
-                        <span class="weather-stat-val tabular-nums" id="weatherWind">22 km/h</span>
+                        <span class="weather-stat-val tabular-nums" id="weatherWind">-- km/h</span>
                     </div>
                 </div>
                 <div class="weather-stat">
-                    <div class="weather-stat-icon" style="color:var(--accent-fire);"><i data-lucide="alert-triangle" style="width:16px;height:16px;"></i></div>
+                    <i data-lucide="alert-triangle" style="width:16px;height:16px; color:var(--accent-fire);"></i>
                     <div class="weather-stat-info">
-                        <span class="weather-stat-lbl">Flood Risk Index</span>
-                        <span class="weather-stat-val" id="weatherFloodRisk">MODERATE (42)</span>
+                        <span class="weather-stat-lbl">Hydrology Risk</span>
+                        <span class="weather-stat-val tabular-nums" id="weatherFloodRisk">--</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- Bottom-Right: Tactical Vector Legend -->
+            <div class="map-legend">
+                <span class="legend-item"><span class="legend-line" style="background:#22d3ee;"></span> Safe Dispatch Route</span>
+                <span class="legend-item"><span class="legend-line" style="background:#ef4444; border-top:1px dashed #fff;"></span> Flooded Detour</span>
+                <span class="legend-item"><span class="legend-line" style="background:#f59e0b;"></span> DEM Runoff Flow</span>
             </div>
         </section>
 
-        <!-- 3. Right Slide-Over Inspector Drawer (400px) -->
+        <!-- 3. Right Inspector & GIS Routing Drawer (420px) -->
         <aside class="inspector-drawer" id="inspectorDrawer">
             <div class="drawer-header">
-                <div class="drawer-title-group">
-                    <div class="drawer-title" id="drawerTitle">
-                        <i data-lucide="crosshair" style="width:15px;height:15px; color:var(--accent-cyan);"></i>
-                        <span id="drawerTitleText">Lekki Phase 1 / VGC</span>
+                <div class="drawer-header-top">
+                    <div class="drawer-title-group">
+                        <div class="drawer-title" id="drawerTitle">
+                            <i data-lucide="crosshair" style="width:15px;height:15px; color:var(--accent-cyan); flex-shrink:0;"></i>
+                            <span id="drawerTitleText">Selecting Sector...</span>
+                        </div>
+                        <span class="tabular-nums" style="font-size:0.62rem; color:var(--text-muted);" id="drawerSubtitle">--</span>
                     </div>
-                    <span style="font-size:0.62rem; color:var(--text-muted);" id="drawerSubtitle">Flood & Hydrology Node · System 63</span>
+                    <span class="card-badge badge-warning" id="drawerBadge">STANDBY</span>
                 </div>
-                <span class="card-badge badge-critical" id="drawerBadge">CRITICAL</span>
+
+                <!-- Interactive Incident Lifecycle Stepper -->
+                <div class="lifecycle-stepper" id="lifecycleStepper" role="group" aria-label="Incident Lifecycle Status">
+                    <button class="step-btn" data-status="TRIAGED" onclick="updateIncidentStatus('TRIAGED')">Triaged</button>
+                    <button class="step-btn" data-status="DISPATCHED" onclick="updateIncidentStatus('DISPATCHED')">Dispatched</button>
+                    <button class="step-btn" data-status="ON_SCENE" onclick="updateIncidentStatus('ON_SCENE')">On Scene</button>
+                    <button class="step-btn" data-status="RESOLVED" onclick="updateIncidentStatus('RESOLVED')">Resolved</button>
+                </div>
             </div>
 
             <div class="drawer-body">
-                <!-- Visual / Recon Frame -->
+                <!-- Panel 1: GIS Terrain DEM, Spatial Exposure & Turn-by-Turn Routing -->
+                <div class="drawer-panel">
+                    <div class="panel-heading">
+                        <span class="panel-heading-left"><i data-lucide="compass" style="width:13px;height:13px; color:var(--accent-cyan);"></i> Terrain DEM, Exposure &amp; Routing</span>
+                        <div style="display:flex; gap:4px;">
+                            <button class="btn btn-outline btn-sm" onclick="zoomToActiveRoute()" title="Fit Route Bounds">
+                                <i data-lucide="maximize-2" style="width:11px;height:11px;"></i> Fit
+                            </button>
+                            <button class="btn btn-outline btn-sm" id="btnRecalcRoute" onclick="refreshInspectorGIS()">
+                                <i data-lucide="refresh-cw" style="width:11px;height:11px;"></i> Route
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="gis-metrics-grid">
+                        <div class="metric-cell">
+                            <div class="metric-cell-val tabular-nums" id="gisElevVal">--m</div>
+                            <div class="metric-cell-lbl" id="gisElevSub">DEM Elev</div>
+                        </div>
+                        <div class="metric-cell">
+                            <div class="metric-cell-val tabular-nums" id="gisRunoffVal">--</div>
+                            <div class="metric-cell-lbl" id="gisRunoffSub">Runoff Dir</div>
+                        </div>
+                        <div class="metric-cell">
+                            <div class="metric-cell-val tabular-nums" id="gisPopVal">--</div>
+                            <div class="metric-cell-lbl">1km Pop</div>
+                        </div>
+                        <div class="metric-cell">
+                            <div class="metric-cell-val tabular-nums" style="color:var(--accent-cyan);" id="gisEtaVal">--m</div>
+                            <div class="metric-cell-lbl" id="gisDistSub">Road ETA</div>
+                        </div>
+                    </div>
+
+                    <div class="route-summary-box" id="routeSummaryBox">
+                        <div class="route-row">
+                            <span style="color:var(--text-muted);">Origin Base</span>
+                            <span style="font-weight:600; text-align:right;" id="routeStationName">Calculating nearest station...</span>
+                        </div>
+                        <div class="route-row">
+                            <span style="color:var(--text-muted);">Response Unit</span>
+                            <span style="font-weight:600; color:var(--accent-cyan); text-align:right;" id="routeUnitAsset">--</span>
+                        </div>
+                        <div class="route-row">
+                            <span style="color:var(--text-muted);">Routing Engine</span>
+                            <span class="tabular-nums" style="font-size:0.63rem; color:var(--text-secondary);" id="routeProviderLabel">OSRM Road Network</span>
+                        </div>
+
+                        <div class="detour-banner clear" id="routeFloodBanner">
+                            <i data-lucide="shield-check" style="width:13px;height:13px; flex-shrink:0;"></i>
+                            <span id="routeFloodBannerText">Verifying road corridor against active flood basins...</span>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <button class="btn btn-outline btn-sm" style="width:100%;" onclick="toggleRouteSteps()" id="btnToggleSteps">
+                                <i data-lucide="list-ordered" style="width:11px;height:11px;"></i> Turn-by-Turn Maneuvers (<span class="tabular-nums" id="routeStepsCount">0</span>)
+                            </button>
+                        </div>
+
+                        <div class="steps-list" id="routeStepsList"></div>
+                    </div>
+
+                    <!-- Shown only when inspecting an ad-hoc Spatial Probe pin -->
+                    <button class="btn btn-danger btn-sm" id="btnCreateFromProbe" style="display:none; width:100%;" onclick="openReportFromProbe()">
+                        <i data-lucide="plus-circle" style="width:12px;height:12px;"></i> Log Emergency Incident at Probe Coordinates
+                    </button>
+                </div>
+
+                <!-- Panel 2: Visual Reconnaissance & Gemini 3 Vision Audit -->
                 <div class="drawer-panel" id="videoPanel">
                     <div class="panel-heading">
-                        <span><i data-lucide="video" style="width:13px;height:13px;"></i> Visual Reconnaissance Feed</span>
-                        <span style="color:var(--accent-cyan); font-size:0.60rem;">HIGH-RES SENSOR</span>
+                        <span class="panel-heading-left"><i data-lucide="video" style="width:13px;height:13px;"></i> Optical &amp; Gemini 3 Vision Recon</span>
+                        <button class="btn btn-outline btn-sm" id="btnAuditAction" onclick="runVisionAudit()">
+                            <i data-lucide="scan" style="width:11px;height:11px;"></i> Run Vision Audit
+                        </button>
                     </div>
-                    <div class="video-box">
-                        <video id="drawerVideo" controls muted autoplay loop>
+                    <div class="video-box" id="videoContainerBox">
+                        <video id="drawerVideo" controls muted autoplay loop playsinline>
                             <source id="drawerVideoSrc" src="test_videos_merged/lekki_vgc_flood.mp4" type="video/mp4">
                         </video>
                     </div>
-
-                    <!-- Metrics Grid -->
-                    <div class="metrics-grid">
+                    <div class="metrics-grid-3">
                         <div class="metric-cell">
-                            <div class="metric-cell-val tabular-nums" id="drawerMetric1">65cm</div>
+                            <div class="metric-cell-val tabular-nums" id="drawerMetric1">--</div>
                             <div class="metric-cell-lbl" id="drawerMetricLbl1">Water Depth</div>
                         </div>
                         <div class="metric-cell">
-                            <div class="metric-cell-val" id="drawerMetric2" style="color:var(--accent-cyan);">AMPHIBIAN</div>
-                            <div class="metric-cell-lbl" id="drawerMetricLbl2">Required Unit</div>
+                            <div class="metric-cell-val" id="drawerMetric2" style="color:var(--accent-cyan);">--</div>
+                            <div class="metric-cell-lbl" id="drawerMetricLbl2">Clearance Class</div>
                         </div>
                         <div class="metric-cell">
-                            <div class="metric-cell-val tabular-nums" id="drawerMetric3">96%</div>
-                            <div class="metric-cell-lbl" id="drawerMetricLbl3">AI Confidence</div>
+                            <div class="metric-cell-val tabular-nums" id="drawerMetric3">--</div>
+                            <div class="metric-cell-lbl" id="drawerMetricLbl3">Ponding Est</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- AI Multimodal Audit Panel -->
-                <div class="drawer-panel">
-                    <div class="panel-heading">
-                        <span><i data-lucide="brain-circuit" style="width:13px;height:13px;"></i> Gemini 3 Multimodal Audit</span>
-                        <button class="btn btn-outline" style="padding:2px 6px; font-size:0.62rem;" id="btnAuditAction" onclick="runVisionAudit()">
-                            <i data-lucide="scan" style="width:11px;height:11px;"></i> Run Audit
-                        </button>
-                    </div>
                     <div class="reasoning-box" id="auditTraceBox">
-                        <div style="color:var(--text-muted);">> Standby: Ready to inspect visual telemetry against landmark depth...</div>
+                        <div style="color:var(--text-muted);">&gt; Ready for multimodal depth &amp; spatial hydrology audit.</div>
                     </div>
                 </div>
 
-                <!-- Sovereign N-ATLAS Multilingual Broadcast Center -->
+                <!-- Panel 3: Sovereign N-ATLAS Multilingual Civic Broadcast -->
                 <div class="natlas-container">
-                    <div class="panel-heading" style="color:#d8b4fe;">
-                        <span><i data-lucide="radio" style="width:13px;height:13px;"></i> Sovereign N-ATLAS Dispatch</span>
-                        <span style="font-size:0.60rem; font-weight:700;" id="natlasActiveLangTag">ENGLISH</span>
+                    <div class="panel-heading" style="color:oklch(0.78 0.13 292);">
+                        <span class="panel-heading-left"><i data-lucide="radio" style="width:13px;height:13px;"></i> Sovereign N-ATLAS Dispatch</span>
+                        <span class="tabular-nums" style="font-size:0.60rem; font-weight:700;" id="natlasActiveLangTag">ENGLISH</span>
                     </div>
                     <div class="broadcast-card" id="natlasAlertText">
-                        Loading localized emergency broadcast...
+                        Synthesizing localized emergency broadcast...
+                    </div>
+                    <div class="sms-target-row">
+                        <input type="tel" class="sms-phone-input tabular-nums" id="smsTargetPhone" placeholder="Target phone (+234...) or leave blank for Community Relay">
                     </div>
                     <div class="broadcast-actions">
-                        <button class="btn btn-outline" style="flex:1; font-size:0.68rem;" onclick="speakBroadcast()">
+                        <button class="btn btn-outline" style="flex:1; font-size:0.68rem;" id="btnSpeakAlert" onclick="speakBroadcast()">
                             <i data-lucide="volume-2" style="width:13px;height:13px;"></i> Read Aloud
                         </button>
-                        <button class="btn btn-primary" style="flex:1; font-size:0.68rem;" onclick="dispatchCivicSMS()">
+                        <button class="btn btn-primary" style="flex:1; font-size:0.68rem;" id="btnSendSms" onclick="dispatchCivicSMS()">
                             <i data-lucide="send" style="width:13px;height:13px;"></i> Transmit SMS
                         </button>
+                    </div>
+                </div>
+
+                <!-- Panel 4: Immutable Incident Audit Timeline -->
+                <div class="drawer-panel">
+                    <div class="panel-heading">
+                        <span class="panel-heading-left"><i data-lucide="history" style="width:13px;height:13px;"></i> Operational Audit Log</span>
+                        <span class="tabular-nums" style="font-size:0.58rem; color:var(--text-muted);" id="auditEventsCount">0 Events</span>
+                    </div>
+                    <div class="timeline-list" id="incidentTimelineList">
+                        <div class="timeline-row">Select an incident to view dispatch history.</div>
                     </div>
                 </div>
             </div>
@@ -1149,74 +1716,142 @@
                 <button class="btn btn-outline" style="flex:1;" onclick="updateIncidentStatus('RESOLVED')">
                     <i data-lucide="check-circle" style="width:13px;height:13px;"></i> Mark Resolved
                 </button>
-                <button class="btn btn-primary" style="flex:1;" onclick="dispatchUnitFromDrawer()">
-                    <i data-lucide="truck" style="width:13px;height:13px;"></i> Dispatch Unit
+                <button class="btn btn-primary" style="flex:1;" id="btnDispatchDrawer" onclick="dispatchUnitFromDrawer()">
+                    <i data-lucide="truck" style="width:13px;height:13px;"></i> Dispatch Nearest Unit
                 </button>
             </div>
         </aside>
     </main>
 
-    <!-- Citizen Emergency Distress Report Modal -->
+    <!-- Citizen & Operator Emergency Distress Report Modal -->
     <div class="modal-overlay" id="reportModal" onclick="if(event.target===this)closeReportModal()">
         <div class="modal-box">
             <div class="modal-header">
                 <div style="display:flex; align-items:center; gap:8px;">
                     <i data-lucide="siren" style="width:16px;height:16px; color:var(--accent-fire);"></i>
-                    <h3 style="font-size:0.90rem; font-weight:700;">Citizen Emergency Distress Report</h3>
+                    <h3 style="font-size:0.90rem; font-weight:700;">Log Emergency Distress Report</h3>
                 </div>
-                <button class="btn btn-outline" style="padding:4px;" onclick="closeReportModal()"><i data-lucide="x" style="width:14px;height:14px;"></i></button>
+                <button class="btn btn-outline btn-sm" onclick="closeReportModal()" aria-label="Close Modal"><i data-lucide="x" style="width:14px;height:14px;"></i></button>
             </div>
             <form class="modal-body" onsubmit="submitCitizenReport(event)">
+                <!-- N-ATLAS Voice / Text Auto-Triage -->
                 <div class="form-group">
-                    <label class="form-label">Emergency Category</label>
-                    <select class="form-select" id="reportService" required>
-                        <option value="flood">Flood & Rising Water</option>
-                        <option value="fire">Fire / Explosion (LAFIRE)</option>
-                        <option value="medical">Medical Casualty / Accident (LASAMBUS)</option>
-                        <option value="crime">Armed Robbery / Theft (Police RRS)</option>
-                        <option value="infrastructure">Collapsed Culvert / Road Sinkhole</option>
-                    </select>
+                    <div class="form-label-row">
+                        <label class="form-label" for="reportDesc">Distress Description (EN / Yorùbá / Pidgin / Hausa / Igbo)</label>
+                        <div style="display:flex; gap:4px;">
+                            <button type="button" class="btn btn-outline btn-sm" id="btnVoiceDictate" onclick="startVoiceDistressCapture()">
+                                <i data-lucide="mic" style="width:11px;height:11px;"></i> Voice Input
+                            </button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="autoTriageFromTranscript()">
+                                <i data-lucide="sparkles" style="width:11px;height:11px;"></i> N-ATLAS Triage
+                            </button>
+                        </div>
+                    </div>
+                    <textarea class="form-textarea" id="reportDesc" placeholder="e.g. 'Omi ti wọle si ile wa ni Admiralty Way Lekki, waist deep!' or describe fire, casualties, robbery..." required></textarea>
                 </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                    <div class="form-group">
+                        <label class="form-label" for="reportService">Emergency Category</label>
+                        <select class="form-select" id="reportService" required>
+                            <option value="flood">Flood &amp; Rising Water</option>
+                            <option value="fire">Fire / Explosion (LAFIRE)</option>
+                            <option value="medical">Medical Trauma (LASAMBUS)</option>
+                            <option value="crime">Security / Robbery (RRS)</option>
+                            <option value="infrastructure">Collapsed Culvert / Road</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="reportWaterDepth">Est. Water Depth (cm, if Flood)</label>
+                        <input type="number" min="0" max="250" class="form-input tabular-nums" id="reportWaterDepth" value="45">
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label class="form-label">Location / Landmark in Lagos</label>
+                    <div class="form-label-row">
+                        <label class="form-label" for="reportLocation">Location / Street Landmark in Lagos</label>
+                        <div style="display:flex; gap:4px;">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="useBrowserGPS()">
+                                <i data-lucide="locate-fixed" style="width:11px;height:11px;"></i> Use GPS
+                            </button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="startPickPointOnMap()">
+                                <i data-lucide="map-pin" style="width:11px;height:11px;"></i> Pick on Map
+                            </button>
+                        </div>
+                    </div>
                     <input type="text" class="form-input" id="reportLocation" placeholder="e.g. Admiralty Way, Lekki Phase 1" required>
+                    <span class="tabular-nums" style="font-size:0.62rem; color:var(--accent-cyan);" id="reportLockedCoordsLabel">Coordinates will auto-geocode within Lagos State</span>
                 </div>
+
                 <div class="form-group">
-                    <label class="form-label">Distress Description</label>
-                    <textarea class="form-textarea" id="reportDesc" placeholder="Describe trapped individuals, water depth, or urgency..." required></textarea>
+                    <label class="form-label" for="reportPhone">Caller Phone (For Termii SMS Dispatch Confirmation &amp; ETA)</label>
+                    <input type="tel" class="form-input tabular-nums" id="reportPhone" placeholder="e.g. 0803 123 4567">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Contact Phone (For SMS Tracking Confirmation)</label>
-                    <input type="tel" class="form-input" id="reportPhone" placeholder="e.g. 0803 123 4567" required>
-                </div>
-                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:0.5rem;">
+
+                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
                     <button type="button" class="btn btn-outline" onclick="closeReportModal()">Cancel</button>
                     <button type="submit" class="btn btn-danger" id="submitReportBtn">
-                        <i data-lucide="send" style="width:14px;height:14px;"></i> Submit Distress Report
+                        <i data-lucide="send" style="width:14px;height:14px;"></i> Submit &amp; Compute Dispatch
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Application Script Logic -->
+    <!-- GIS & Subsystem Diagnostics Modal -->
+    <div class="modal-overlay" id="diagnosticsModal" onclick="if(event.target===this)closeDiagnosticsModal()">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <i data-lucide="cpu" style="width:16px;height:16px; color:var(--accent-cyan);"></i>
+                    <h3 style="font-size:0.90rem; font-weight:700;">GIS &amp; Infrastructure Subsystem Telemetry</h3>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="closeDiagnosticsModal()"><i data-lucide="x" style="width:14px;height:14px;"></i></button>
+            </div>
+            <div class="modal-body" id="diagnosticsBody">
+                <div class="skeleton-shimmer" style="height:140px; border-radius:var(--radius-inner);"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Non-Blocking Enterprise Toast Notification Stack -->
+    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+    <!-- Application Logic -->
     <script>
         const API_BASE = window.location.pathname.startsWith('/lifeline') ? '/lifeline/api' : '/api';
 
         let map;
-        let darkBaseLayer, darkRefLayer, satLayer;
-        let activeMarkers = [];
+        let baseLayers = {};
+        let stationMarkersLayer, incidentLayer, routeLayerGroup, runoffLayerGroup, coverageLayerGroup, probeLayerGroup;
+
         let allIncidents = [];
+        let cachedGeoFeatures = [];
         let selectedService = 'all';
+        let selectedStatusFilter = 'ACTIVE_ONLY';
+        let searchDebounceTimer = null;
+
         let currentInspectedItem = null;
+        let currentRoutePayload = null;
         let currentGlobalLang = 'english';
 
+        // Interactive map click modes: null | 'probe' | 'pick_report_coords'
+        let mapClickMode = null;
+        let lockedReportCoords = null;
+        let lastProbeCoords = null;
+
+        let overlayVisibility = {
+            route: true,
+            runoff: true,
+            coverage: false
+        };
+
         const SERVICE_COLORS = {
-            flood: '#22d3ee',          // Cyan
-            fire: '#ef4444',           // Crimson
-            medical: '#a855f7',        // Violet
-            crime: '#f59e0b',          // Amber
-            infrastructure: '#10b981'  // Emerald
+            flood: '#22d3ee',
+            fire: '#ef4444',
+            medical: '#a855f7',
+            crime: '#f59e0b',
+            infrastructure: '#10b981'
         };
 
         const LANG_NAMES = {
@@ -1227,69 +1862,311 @@
             igbo: 'IGBO'
         };
 
-        // Initialize Map with High-Resolution Esri Basemaps
+        // --- TOAST NOTIFICATIONS (REPLACES NATIVE BROWSER ALERTS) ---
+        function showToast(title, message, variant = 'info') {
+            const stack = document.getElementById('toastStack');
+            const colorMap = {
+                info: 'var(--accent-cyan)',
+                success: 'var(--accent-infra)',
+                warning: 'var(--accent-crime)',
+                danger: 'var(--accent-fire)'
+            };
+            const iconMap = {
+                info: 'radio',
+                success: 'check-circle-2',
+                warning: 'alert-triangle',
+                danger: 'shield-alert'
+            };
+            const accent = colorMap[variant] || colorMap.info;
+            const icon = iconMap[variant] || iconMap.info;
+
+            const el = document.createElement('div');
+            el.className = 'toast-item';
+            el.style.borderLeft = `3px solid ${accent}`;
+            el.innerHTML = `
+                <i data-lucide="${icon}" style="width:16px;height:16px; color:${accent}; flex-shrink:0; margin-top:2px;"></i>
+                <div class="toast-content">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-msg">${escapeHtml(message)}</div>
+                </div>
+                <button class="btn btn-sm" style="padding:2px;" onclick="this.parentElement.remove()" aria-label="Dismiss">
+                    <i data-lucide="x" style="width:12px;height:12px; color:var(--text-muted);"></i>
+                </button>
+            `;
+            stack.appendChild(el);
+            lucide.createIcons({ nodes: [el] });
+
+            setTimeout(() => {
+                if (el.parentElement) el.remove();
+            }, 6500);
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        // --- INITIALIZE LEAFLET WITH CARTO, ESRI, SATELLITE & TOPO BASEMAPS ---
         function initMap() {
             map = L.map('map', {
-                center: [6.465, 3.435],
+                center: [6.468, 3.432],
                 zoom: 12,
                 zoomControl: false,
                 attributionControl: false,
                 minZoom: 10,
-                maxZoom: 17
-            });
-
-            // Clean, 100% Free, Zero-watermark Esri Canvas
-            darkBaseLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 17
-            });
-            darkRefLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 17,
-                pane: 'overlayPane'
-            });
-            satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 18
             });
 
-            darkBaseLayer.addTo(map);
-            darkRefLayer.addTo(map);
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+            // 1. CARTO Dark Matter Retina (GitHub Student Pack / CARTO Enterprise Cartography)
+            const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                subdomains: 'abcd',
+                maxZoom: 19
+            });
+
+            // 2. Esri Tactical Dark Gray Canvas + Reference
+            const esriDarkGroup = L.layerGroup([
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17 }),
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 17, pane: 'overlayPane' })
+            ]);
+
+            // 3. Esri Satellite Imagery + Hybrid Street Labels
+            const satelliteGroup = L.layerGroup([
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }),
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, pane: 'overlayPane' })
+            ]);
+
+            // 4. DEM Topographic Elevation Contours
+            const topoLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 18
+            });
+
+            baseLayers = {
+                carto_dark: cartoDark,
+                esri_dark: esriDarkGroup,
+                satellite: satelliteGroup,
+                topo: topoLayer
+            };
+
+            cartoDark.addTo(map);
+
+            // Ordered GIS Vector Layer Groups
+            coverageLayerGroup = L.layerGroup();
+            runoffLayerGroup = L.layerGroup().addTo(map);
+            incidentLayer = L.layerGroup().addTo(map);
+            stationMarkersLayer = L.layerGroup().addTo(map);
+            routeLayerGroup = L.layerGroup().addTo(map);
+            probeLayerGroup = L.layerGroup().addTo(map);
+
+            map.on('click', handleMapClick);
         }
 
-        function switchBasemap(type) {
-            document.getElementById('btnTacticalMap').classList.toggle('active', type === 'dark');
-            document.getElementById('btnSatelliteMap').classList.toggle('active', type === 'satellite');
+        function switchBasemap(key) {
+            Object.values(baseLayers).forEach(layer => {
+                if (map.hasLayer(layer)) map.removeLayer(layer);
+            });
+            if (baseLayers[key]) baseLayers[key].addTo(map);
 
-            if (type === 'satellite') {
-                if (map.hasLayer(darkBaseLayer)) map.removeLayer(darkBaseLayer);
-                if (map.hasLayer(darkRefLayer)) map.removeLayer(darkRefLayer);
-                satLayer.addTo(map);
-            } else {
-                if (map.hasLayer(satLayer)) map.removeLayer(satLayer);
-                darkBaseLayer.addTo(map);
-                darkRefLayer.addTo(map);
+            document.getElementById('bmCartoDark').classList.toggle('active', key === 'carto_dark');
+            document.getElementById('bmEsriDark').classList.toggle('active', key === 'esri_dark');
+            document.getElementById('bmSatellite').classList.toggle('active', key === 'satellite');
+            document.getElementById('bmTopo').classList.toggle('active', key === 'topo');
+        }
+
+        function toggleOverlay(which) {
+            overlayVisibility[which] = !overlayVisibility[which];
+            if (which === 'route') {
+                document.getElementById('btnToggleRouteLayer').classList.toggle('active', overlayVisibility.route);
+                if (overlayVisibility.route) routeLayerGroup.addTo(map);
+                else map.removeLayer(routeLayerGroup);
+            } else if (which === 'runoff') {
+                document.getElementById('btnToggleRunoffLayer').classList.toggle('active', overlayVisibility.runoff);
+                if (overlayVisibility.runoff) {
+                    runoffLayerGroup.addTo(map);
+                    loadRunoffRiskVectors();
+                } else {
+                    map.removeLayer(runoffLayerGroup);
+                }
+            } else if (which === 'coverage') {
+                document.getElementById('btnToggleCoverageLayer').classList.toggle('active', overlayVisibility.coverage);
+                if (overlayVisibility.coverage) {
+                    coverageLayerGroup.addTo(map);
+                    renderCoverageRings();
+                } else {
+                    map.removeLayer(coverageLayerGroup);
+                }
             }
         }
 
-        // Live Clock
-        function startClock() {
-            setInterval(() => {
-                const now = new Date();
-                document.getElementById('clockDisplay').textContent = now.toLocaleTimeString('en-GB') + ' WAT';
-            }, 1000);
+        // --- INTERACTIVE MAP MODES: SPATIAL PROBE & PICK REPORT PIN ---
+        function toggleSpatialProbeMode() {
+            if (mapClickMode === 'probe') {
+                cancelMapInteractiveMode();
+                return;
+            }
+            mapClickMode = 'probe';
+            document.getElementById('btnProbeTool').classList.add('probe-active');
+            document.getElementById('map').classList.add('probe-cursor');
+            document.getElementById('mapModeText').textContent = 'Spatial Probe Active — Click any point in Lagos to inspect DEM elevation, runoff flow, 1km population & responder route';
+            document.getElementById('mapModePill').classList.add('visible');
         }
 
-        // Global Language Switcher Handlers
+        function startPickPointOnMap() {
+            closeReportModal();
+            mapClickMode = 'pick_report_coords';
+            document.getElementById('map').classList.add('pin-cursor');
+            document.getElementById('mapModeText').textContent = 'Pinpoint Incident Location — Click exact street or spot on the map';
+            document.getElementById('mapModePill').classList.add('visible');
+        }
+
+        function cancelMapInteractiveMode() {
+            mapClickMode = null;
+            probeLayerGroup.clearLayers();
+            document.getElementById('btnProbeTool').classList.remove('probe-active');
+            const mapEl = document.getElementById('map');
+            mapEl.classList.remove('probe-cursor', 'pin-cursor');
+            document.getElementById('mapModePill').classList.remove('visible');
+        }
+
+        async function handleMapClick(e) {
+            const lat = Number(e.latlng.lat.toFixed(6));
+            const lon = Number(e.latlng.lng.toFixed(6));
+
+            if (mapClickMode === 'pick_report_coords') {
+                lockedReportCoords = [lon, lat];
+                cancelMapInteractiveMode();
+                openReportModal();
+                const lbl = document.getElementById('reportLockedCoordsLabel');
+                lbl.textContent = `Pin locked: ${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E — Resolving street address...`;
+                try {
+                    const r = await fetch(`${API_BASE}/gis/reverse?lon=${lon}&lat=${lat}`);
+                    if (r.ok) {
+                        const d = await r.json();
+                        document.getElementById('reportLocation').value = d.location;
+                        lbl.textContent = `Locked WGS84: [${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E] · ${d.source}`;
+                    }
+                } catch (err) {
+                    document.getElementById('reportLocation').value = `${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E`;
+                }
+                return;
+            }
+
+            if (mapClickMode === 'probe') {
+                await runSpatialProbeAt(lon, lat);
+            }
+        }
+
+        async function runSpatialProbeAt(lon, lat) {
+            lastProbeCoords = [lon, lat];
+            probeLayerGroup.clearLayers();
+
+            // Temporary pulsing probe marker + 1km exposure circle
+            const probeCircle = L.circle([lat, lon], {
+                radius: 1000,
+                color: '#f59e0b',
+                weight: 1.5,
+                dashArray: '4 4',
+                fillColor: '#f59e0b',
+                fillOpacity: 0.08
+            }).addTo(probeLayerGroup);
+
+            const probePin = L.circleMarker([lat, lon], {
+                radius: 7,
+                color: '#ffffff',
+                weight: 2,
+                fillColor: '#f59e0b',
+                fillOpacity: 1
+            }).addTo(probeLayerGroup);
+
+            openDrawer();
+            document.getElementById('drawerTitleText').textContent = 'Running GIS Spatial Probe...';
+            document.getElementById('drawerSubtitle').textContent = `${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E · 1.0km Buffer`;
+            document.getElementById('btnCreateFromProbe').style.display = 'inline-flex';
+            document.getElementById('videoPanel').style.display = 'none';
+
+            try {
+                const svc = selectedService === 'all' ? 'flood' : selectedService;
+                const res = await fetch(`${API_BASE}/gis/probe?lon=${lon}&lat=${lat}&service=${svc}&radius_m=1000`);
+                if (!res.ok) throw new Error('Probe HTTP error');
+                const data = await res.json();
+
+                currentInspectedItem = {
+                    id: null,
+                    isProbe: true,
+                    title: data.place.location,
+                    location: data.place.location,
+                    service: svc,
+                    severity: data.dem.hydro_risk_level === 'CRITICAL' ? 'CRITICAL' : (data.dem.hydro_risk_level === 'HIGH' ? 'WARNING' : 'NORMAL'),
+                    water_depth_cm: data.dem.predicted_ponding_cm,
+                    coordinates: [lon, lat],
+                    assigned_unit: data.route.origin_station.dispatch_asset
+                };
+
+                document.getElementById('drawerTitleText').textContent = data.place.location;
+                document.getElementById('drawerSubtitle').textContent = `${data.exposure.district} · [${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E]`;
+                const badge = document.getElementById('drawerBadge');
+                badge.textContent = `DEM: ${data.dem.hydro_risk_level}`;
+                badge.className = `card-badge ${data.dem.hydro_risk_level === 'CRITICAL' ? 'badge-critical' : (data.dem.hydro_risk_level === 'HIGH' ? 'badge-warning' : 'badge-normal')}`;
+
+                // Draw Downslope Runoff Vector Arrow on Map
+                if (data.dem.runoff_vector_line && data.dem.runoff_vector_line.length === 2) {
+                    const [[ lon1, lat1 ], [ lon2, lat2 ]] = data.dem.runoff_vector_line;
+                    L.polyline([[lat1, lon1], [lat2, lon2]], {
+                        color: '#f59e0b',
+                        weight: 3,
+                        dashArray: '6 4'
+                    }).bindTooltip(`Downslope Runoff Flow: ${data.dem.runoff_bearing_deg}° (${data.dem.runoff_compass})`).addTo(probeLayerGroup);
+                }
+
+                probePin.bindTooltip(
+                    `<b>${escapeHtml(data.place.location)}</b><br>Elev: ${data.dem.elevation_m}m ASL · 1km Pop: ${data.exposure.exposed_population.toLocaleString()}`,
+                    { permanent: true, direction: 'top' }
+                ).openTooltip();
+
+                applyGISTelemetryToDrawer(data.dem, data.exposure, data.route);
+                drawRouteOnMap(data.route);
+                loadNatlasBroadcast();
+            } catch (e) {
+                showToast('Spatial Probe Error', 'Unable to query DEM/OSRM probe endpoint.', 'danger');
+            }
+        }
+
+        function openReportFromProbe() {
+            if (!lastProbeCoords) return;
+            lockedReportCoords = [...lastProbeCoords];
+            const placeTitle = currentInspectedItem ? currentInspectedItem.location : '';
+            cancelMapInteractiveMode();
+            openReportModal();
+            if (placeTitle) document.getElementById('reportLocation').value = placeTitle;
+            document.getElementById('reportLockedCoordsLabel').textContent =
+                `Locked from Spatial Probe: [${lockedReportCoords[1].toFixed(5)}°N, ${lockedReportCoords[0].toFixed(5)}°E]`;
+        }
+
+        // --- CLOCK ---
+        function startClock() {
+            const tick = () => {
+                const now = new Date();
+                document.getElementById('clockDisplay').textContent =
+                    now.toLocaleTimeString('en-GB', { timeZone: 'Africa/Lagos' }) + ' WAT';
+            };
+            tick();
+            setInterval(tick, 1000);
+        }
+
+        // --- LANGUAGE SWITCHER ---
         function setGlobalLang(lang, btnEl) {
             currentGlobalLang = lang;
             document.querySelectorAll('.lang-pill-btn').forEach(b => b.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
-            
-            const tagEl = document.getElementById('natlasActiveLangTag');
-            if (tagEl) tagEl.textContent = LANG_NAMES[lang] || lang.toUpperCase();
-
+            document.getElementById('natlasActiveLangTag').textContent = LANG_NAMES[lang] || lang.toUpperCase();
             loadNatlasBroadcast();
         }
 
-        // Fetch Live Weather & KPIs
+        // --- FETCH TELEMETRY & KPIS ---
         async function fetchTelemetry() {
             try {
                 const [kpisRes, weatherRes] = await Promise.all([
@@ -1301,12 +2178,13 @@
                     const kpis = await kpisRes.json();
                     document.getElementById('kpiActiveIncidents').textContent = `${kpis.active_incidents} Active`;
                     document.getElementById('kpiCritical').textContent = `${kpis.critical_sectors} Critical`;
+                    document.getElementById('kpiAvgEta').textContent = `${kpis.avg_eta_min} min`;
                     document.getElementById('kpiRainfall').textContent = `${kpis.rainfall_mm} mm/h`;
                     document.getElementById('kpiTide').textContent = `+${kpis.tide_surge_m}m`;
-                    document.getElementById('railTotalCount').textContent = `${kpis.reports_today} Total`;
+                    document.getElementById('railTotalCount').textContent = `${kpis.active_incidents} Active`;
 
                     if (kpis.by_service) {
-                        document.getElementById('cntAll').textContent = kpis.reports_today;
+                        document.getElementById('cntAll').textContent = kpis.active_incidents;
                         document.getElementById('cntFlood').textContent = kpis.by_service.flood || 0;
                         document.getElementById('cntFire').textContent = kpis.by_service.fire || 0;
                         document.getElementById('cntMedical').textContent = kpis.by_service.medical || 0;
@@ -1323,34 +2201,67 @@
                     document.getElementById('weatherFloodRisk').textContent = `${w.flood_risk_score} (${w.flood_risk_index})`;
                 }
             } catch (e) {
-                console.warn('Telemetry poll error', e);
+                console.warn('Telemetry poll warning:', e);
             }
         }
 
-        // Load & Filter Incidents
+        // --- LOAD & FILTER INCIDENTS ---
+        function debouncedSearchIncidents() {
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => loadIncidents(), 200);
+        }
+
+        function setStatusFilter(st, btnEl) {
+            selectedStatusFilter = st;
+            document.querySelectorAll('.status-seg-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            loadIncidents();
+        }
+
+        function setServiceFilter(svc, btnEl) {
+            selectedService = svc;
+            document.querySelectorAll('.service-tab-btn').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            loadIncidents();
+        }
+
         async function loadIncidents() {
+            const q = document.getElementById('incidentSearchInput').value.trim();
+            const params = new URLSearchParams();
+            if (selectedService !== 'all') params.set('service', selectedService);
+            if (selectedStatusFilter !== 'all') params.set('status', selectedStatusFilter);
+            if (q) params.set('q', q);
+
             try {
-                const url = selectedService === 'all' ? `${API_BASE}/incidents` : `${API_BASE}/incidents?service=${selectedService}`;
-                const res = await fetch(url);
-                if (res.ok) {
-                    allIncidents = await res.json();
-                    renderIncidentFeed();
-                    renderMapLayers();
-                }
+                const res = await fetch(`${API_BASE}/incidents?${params.toString()}`);
+                if (!res.ok) throw new Error('Incident fetch error');
+                allIncidents = await res.json();
+                renderIncidentFeed();
+                await renderMapLayers();
             } catch (err) {
-                console.error('Failed to load incidents', err);
+                const container = document.getElementById('incidentFeed');
+                container.innerHTML = `
+                    <div class="error-state-box">
+                        <div style="font-weight:700; color:var(--accent-fire);">Incident Feed Disconnected</div>
+                        <div style="color:var(--text-secondary);">Unable to synchronize SQLite incident log.</div>
+                        <button class="btn btn-outline btn-sm" onclick="loadIncidents()">
+                            <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Retry Sync
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
             }
         }
 
-        // Render Sidebar Incident Feed with Dedicated Empty State
         function renderIncidentFeed() {
             const container = document.getElementById('incidentFeed');
             if (!allIncidents || allIncidents.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state-box">
-                        <i data-lucide="shield-check" class="empty-state-icon" style="width:28px;height:28px;"></i>
-                        <div class="empty-state-text">No active incidents reported in this sector.</div>
-                        <button class="btn btn-outline" style="font-size:0.68rem; margin-top:4px;" onclick="openReportModal()">
+                        <i data-lucide="shield-check" style="width:28px;height:28px; opacity:0.65;"></i>
+                        <div style="font-size:0.74rem; font-weight:600; color:var(--text-secondary);">No matching incidents in this view</div>
+                        <div style="font-size:0.66rem;">All monitored sectors nominal or filtered out.</div>
+                        <button class="btn btn-outline btn-sm" style="margin-top:4px;" onclick="openReportModal()">
                             <i data-lucide="plus" style="width:12px;height:12px;"></i> Log New Report
                         </button>
                     </div>
@@ -1360,75 +2271,83 @@
             }
 
             let html = '';
-            allIncidents.forEach(item => {
+            allIncidents.forEach((item, idx) => {
                 const badgeCls = item.severity === 'CRITICAL' ? 'badge-critical' : (item.severity === 'WARNING' ? 'badge-warning' : 'badge-normal');
                 const isSel = currentInspectedItem && currentInspectedItem.id === item.id ? 'selected' : '';
-                const timeStr = item.created_at ? item.created_at.split('T')[1].slice(0, 5) : 'Live';
+                const timeStr = item.created_at && item.created_at.includes('T') ? item.created_at.split('T')[1].slice(0, 5) : 'Live';
                 const svc = item.service || 'flood';
                 const color = SERVICE_COLORS[svc] || '#22d3ee';
+                const etaChip = item.route_eta_min ? `ETA ${item.route_eta_min}m` : 'Routing';
+                const delayMs = Math.min(idx * 45, 320);
 
                 html += `
-                    <div class="incident-card ${isSel}" onclick="selectIncident('${item.id}')" tabindex="0">
+                    <div class="incident-card ${isSel}" style="animation-delay:${delayMs}ms;" onclick="selectIncident('${item.id}')" onkeydown="if(event.key==='Enter')selectIncident('${item.id}')" tabindex="0">
                         <div class="card-top">
-                            <span style="font-size:0.62rem; font-weight:700; text-transform:uppercase; color:${color};">
-                                ${svc.toUpperCase()}
-                            </span>
-                            <span class="card-badge ${badgeCls}">${item.severity}</span>
+                            <div style="display:flex; align-items:center; gap:5px;">
+                                <span style="font-size:0.60rem; font-weight:800; text-transform:uppercase; color:${color};">${escapeHtml(svc)}</span>
+                                <span class="status-chip">${escapeHtml(item.status || 'TRIAGED')}</span>
+                            </div>
+                            <span class="card-badge ${badgeCls}">${escapeHtml(item.severity)}</span>
                         </div>
-                        <div class="card-title">${item.title}</div>
+                        <div class="card-title">${escapeHtml(item.title)}</div>
                         <div class="card-meta">
-                            <span><i data-lucide="map-pin" style="width:11px;height:11px; vertical-align:middle;"></i> ${item.location}</span>
-                            <span class="tabular-nums">${timeStr} WAT</span>
+                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:155px;">
+                                <i data-lucide="map-pin" style="width:10px;height:10px; vertical-align:-1px;"></i> ${escapeHtml(item.location)}
+                            </span>
+                            <span class="tabular-nums">${etaChip} · ${timeStr}</span>
                         </div>
                     </div>
                 `;
             });
 
             container.innerHTML = html;
-            lucide.createIcons();
+            lucide.createIcons({ nodes: [container] });
         }
 
-        // Render Map Layers from GeoJSON & Live Incidents
+        // --- RENDER GIS LAYERS ON MAP ---
         async function renderMapLayers() {
-            activeMarkers.forEach(m => map.removeLayer(m));
-            activeMarkers = [];
+            stationMarkersLayer.clearLayers();
+            incidentLayer.clearLayers();
 
             try {
                 const geoRes = await fetch(`${API_BASE}/zones/geojson?service=${selectedService}`);
                 if (geoRes.ok) {
                     const geojson = await geoRes.json();
-                    geojson.features.forEach(feat => {
+                    cachedGeoFeatures = geojson.features || [];
+
+                    cachedGeoFeatures.forEach(feat => {
                         const [lon, lat] = feat.geometry.coordinates;
                         const props = feat.properties;
                         const cat = props.category || 'flood';
                         const color = SERVICE_COLORS[cat] || '#22d3ee';
 
                         const markerHtml = `
-                            <div style="background:${color}; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px ${color}77; border:2px solid oklch(0.97 0.005 250);">
+                            <div style="background:${color}; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px ${color}80; border:2px solid oklch(0.96 0.005 250);">
                                 <div style="width:6px; height:6px; border-radius:50%; background:oklch(0.10 0.015 250);"></div>
                             </div>
                         `;
                         const customIcon = L.divIcon({
                             html: markerHtml,
                             className: 'custom-map-icon',
-                            iconSize: [22, 22],
-                            iconAnchor: [11, 11]
+                            iconSize: [20, 20],
+                            iconAnchor: [10, 10]
                         });
 
-                        const marker = L.marker([lat, lon], { icon: customIcon }).addTo(map);
-                        marker.bindTooltip(`<b>${props.name}</b><br><span style="font-size:0.65rem; color:${color};">${cat.toUpperCase()} · ${props.severity}</span>`, {
-                            direction: 'top'
-                        });
-
+                        const marker = L.marker([lat, lon], { icon: customIcon }).addTo(stationMarkersLayer);
+                        marker.bindTooltip(
+                            `<b>${escapeHtml(props.name)}</b><br><span style="font-size:0.64rem; color:${color};">${cat.toUpperCase()} · ${escapeHtml(props.dispatch_asset || props.severity)}</span>`,
+                            { direction: 'top' }
+                        );
                         marker.on('click', () => {
+                            if (mapClickMode) return;
                             inspectGeoFeature(feat);
                         });
-
-                        activeMarkers.push(marker);
                     });
+
+                    if (overlayVisibility.coverage) renderCoverageRings();
                 }
             } catch (e) {
-                console.warn('GeoJSON layer error', e);
+                console.warn('GeoJSON station layer warning:', e);
             }
 
             allIncidents.forEach(inc => {
@@ -1436,249 +2355,547 @@
                     const [lon, lat] = inc.coordinates;
                     const cat = inc.service || 'flood';
                     const color = SERVICE_COLORS[cat] || '#ef4444';
+                    const isResolved = inc.status === 'RESOLVED';
 
                     const circle = L.circle([lat, lon], {
-                        radius: 650,
+                        radius: inc.severity === 'CRITICAL' ? 620 : 420,
                         fillColor: color,
-                        fillOpacity: 0.16,
+                        fillOpacity: isResolved ? 0.05 : 0.16,
                         color: color,
-                        weight: 1.5
-                    }).addTo(map);
+                        weight: isResolved ? 1 : 1.8,
+                        dashArray: isResolved ? '4 4' : null
+                    }).addTo(incidentLayer);
 
-                    circle.bindTooltip(`<b>${inc.title}</b><br>${inc.location}`, { direction: 'top' });
+                    circle.bindTooltip(
+                        `<b>${escapeHtml(inc.title)}</b><br><span class="tabular-nums">${escapeHtml(inc.id)} · ${escapeHtml(inc.status)}</span>`,
+                        { direction: 'top' }
+                    );
                     circle.on('click', () => {
+                        if (mapClickMode) return;
                         selectIncident(inc.id);
                     });
+                }
+            });
 
-                    activeMarkers.push(circle);
+            if (overlayVisibility.runoff) {
+                loadRunoffRiskVectors();
+            }
+        }
+
+        function renderCoverageRings() {
+            coverageLayerGroup.clearLayers();
+            cachedGeoFeatures.forEach(feat => {
+                const cat = feat.properties.category;
+                if (['fire', 'medical', 'crime'].includes(cat)) {
+                    const [lon, lat] = feat.geometry.coordinates;
+                    const color = SERVICE_COLORS[cat] || '#22d3ee';
+                    L.circle([lat, lon], {
+                        radius: 2500,
+                        color: color,
+                        weight: 1,
+                        dashArray: '5 5',
+                        fillColor: color,
+                        fillOpacity: 0.04,
+                        interactive: false
+                    }).addTo(coverageLayerGroup);
                 }
             });
         }
 
-        // Service Tab Switcher
-        function setServiceFilter(svc, btnEl) {
-            selectedService = svc;
-            document.querySelectorAll('.service-tab-btn').forEach(b => b.classList.remove('active'));
-            if (btnEl) btnEl.classList.add('active');
-            loadIncidents();
+        async function loadRunoffRiskVectors() {
+            runoffLayerGroup.clearLayers();
+            try {
+                const res = await fetch(`${API_BASE}/gis/risk-zones`);
+                if (!res.ok) return;
+                const fc = await res.json();
+                (fc.features || []).forEach(feat => {
+                    const p = feat.properties || {};
+                    if (p.layer_type === 'runoff_vector' && feat.geometry.type === 'LineString') {
+                        const [[lon1, lat1], [lon2, lat2]] = feat.geometry.coordinates;
+                        L.polyline([[lat1, lon1], [lat2, lon2]], {
+                            color: '#f59e0b',
+                            weight: 2.2,
+                            dashArray: '5 4',
+                            opacity: 0.85
+                        }).bindTooltip(
+                            `<b>DEM Runoff Flow (${escapeHtml(p.runoff_compass)})</b><br>${escapeHtml(p.name)}<br>Elev: ${p.elevation_m}m ASL · Slope: ${p.slope_pct}%`
+                        ).addTo(runoffLayerGroup);
+
+                        // Arrow terminus dot
+                        L.circleMarker([lat2, lon2], {
+                            radius: 3.5,
+                            color: '#f59e0b',
+                            fillColor: '#f59e0b',
+                            fillOpacity: 1
+                        }).addTo(runoffLayerGroup);
+                    }
+                });
+            } catch (e) {
+                console.warn('Runoff vector fetch warning:', e);
+            }
         }
 
-        // Select Incident
-        function selectIncident(id) {
-            const inc = allIncidents.find(i => i.id === id);
+        // --- DRAW TURN-BY-TURN ROUTE & FLOOD DETOUR ON MAP ---
+        function drawRouteOnMap(routeData) {
+            currentRoutePayload = routeData;
+            routeLayerGroup.clearLayers();
+            if (!routeData || !routeData.geometry || !routeData.geometry.coordinates) return;
+
+            // 1. If primary route intersected flood zone and detour was applied, render blocked route in dashed crimson
+            if (routeData.compromised_direct_geometry && routeData.compromised_direct_geometry.coordinates) {
+                const blockedLatLngs = routeData.compromised_direct_geometry.coordinates.map(c => [c[1], c[0]]);
+                L.polyline(blockedLatLngs, {
+                    color: '#ef4444',
+                    weight: 3,
+                    dashArray: '6 6',
+                    opacity: 0.8
+                }).bindTooltip('Blocked Direct Route — Intersects Submerged Flood Basin (>30cm)').addTo(routeLayerGroup);
+
+                (routeData.compromised_flood_zones || []).forEach(hz => {
+                    L.circleMarker([hz.coordinates[1], hz.coordinates[0]], {
+                        radius: 8,
+                        color: '#ef4444',
+                        weight: 2,
+                        fillColor: '#ef4444',
+                        fillOpacity: 0.35
+                    }).bindTooltip(`Flood Blockage Avoided: ${escapeHtml(hz.name)} (${hz.water_cm}cm)`).addTo(routeLayerGroup);
+                });
+            }
+
+            // 2. Render active safe road route with dark casing + bright cyan core
+            const routeLatLngs = routeData.geometry.coordinates.map(c => [c[1], c[0]]);
+            L.polyline(routeLatLngs, {
+                color: '#082f49',
+                weight: 7,
+                opacity: 0.85
+            }).addTo(routeLayerGroup);
+
+            const mainLine = L.polyline(routeLatLngs, {
+                color: '#22d3ee',
+                weight: 3.8,
+                opacity: 0.98
+            }).bindTooltip(
+                `<b>Active Dispatch Route</b><br>${escapeHtml(routeData.origin_station.name)}<br>${routeData.distance_km} km · Priority ETA ${routeData.emergency_eta_min} min`
+            ).addTo(routeLayerGroup);
+
+            // Origin responder station ring
+            const [sLon, sLat] = routeData.origin_station.coordinates;
+            L.circleMarker([sLat, sLon], {
+                radius: 7,
+                color: '#22d3ee',
+                weight: 2.5,
+                fillColor: '#0e7490',
+                fillOpacity: 1
+            }).bindTooltip(`Origin Base: ${escapeHtml(routeData.origin_station.name)}`).addTo(routeLayerGroup);
+        }
+
+        function zoomToActiveRoute() {
+            if (!currentRoutePayload || !currentRoutePayload.geometry) return;
+            const latlngs = currentRoutePayload.geometry.coordinates.map(c => [c[1], c[0]]);
+            if (latlngs.length > 1) {
+                map.fitBounds(L.latLngBounds(latlngs), { padding: [48, 48] });
+            }
+        }
+
+        // --- SELECT INCIDENT OR GEO FEATURE ---
+        async function selectIncident(id) {
+            probeLayerGroup.clearLayers();
+            document.getElementById('btnCreateFromProbe').style.display = 'none';
+
+            let inc = allIncidents.find(i => i.id === id);
+            try {
+                const detailRes = await fetch(`${API_BASE}/incidents/${id}`);
+                if (detailRes.ok) inc = await detailRes.json();
+            } catch (e) {}
+
             if (!inc) return;
             currentInspectedItem = inc;
             renderIncidentFeed();
 
             if (inc.coordinates && inc.coordinates.length === 2) {
-                map.flyTo([inc.coordinates[1], inc.coordinates[0]], 14, { duration: 0.8 });
+                map.flyTo([inc.coordinates[1], inc.coordinates[0]], 14, { duration: 0.7 });
             }
 
             openDrawer();
             populateDrawerFromIncident(inc);
+            await refreshInspectorGIS();
         }
 
-        // Inspect GeoJSON Feature
-        function inspectGeoFeature(feat) {
+        async function inspectGeoFeature(feat) {
+            probeLayerGroup.clearLayers();
+            document.getElementById('btnCreateFromProbe').style.display = 'none';
+
             const props = feat.properties;
             const [lon, lat] = feat.geometry.coordinates;
             currentInspectedItem = {
-                id: feat.id,
+                id: null,
+                feature_id: feat.id,
                 title: props.name,
                 location: props.name,
                 service: props.category,
+                status: 'MONITORED',
                 severity: props.severity,
                 water_depth_cm: props.water_cm || 0,
-                assigned_unit: props.dispatch_asset || 'Unit 01',
+                assigned_unit: props.dispatch_asset || 'Station Unit',
                 description: props.description,
                 coordinates: [lon, lat],
-                video_id: props.video_id
+                video_id: props.video_id,
+                events: [{
+                    event_type: 'SENSOR_ONLINE',
+                    actor: 'Lagos ESC Mesh',
+                    summary: props.description || 'Infrastructure telemetry online.',
+                    timestamp: new Date().toISOString()
+                }]
             };
 
+            map.flyTo([lat, lon], 14, { duration: 0.7 });
             openDrawer();
             populateDrawerFromIncident(currentInspectedItem);
+            await refreshInspectorGIS();
         }
 
-        // Populate Slide-Over Inspector Drawer
         function populateDrawerFromIncident(item) {
-            const color = SERVICE_COLORS[item.service] || '#22d3ee';
             document.getElementById('drawerTitleText').textContent = item.title || item.location;
-            document.getElementById('drawerSubtitle').textContent = `${(item.service || 'Hazard').toUpperCase()} Sector · ${item.location}`;
-            
+            const coordsTxt = item.coordinates ? ` · [${item.coordinates[1].toFixed(4)}°N, ${item.coordinates[0].toFixed(4)}°E]` : '';
+            document.getElementById('drawerSubtitle').textContent = `${(item.id || 'NODE')} · ${(item.service || 'hazard').toUpperCase()}${coordsTxt}`;
+
             const badge = document.getElementById('drawerBadge');
             badge.textContent = item.severity || 'WARNING';
             badge.className = `card-badge ${item.severity === 'CRITICAL' ? 'badge-critical' : (item.severity === 'WARNING' ? 'badge-warning' : 'badge-normal')}`;
 
+            // Lifecycle Stepper Active State
+            const stepper = document.getElementById('lifecycleStepper');
+            stepper.style.display = item.id ? 'grid' : 'none';
+            document.querySelectorAll('#lifecycleStepper .step-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.status === (item.status || 'TRIAGED'));
+            });
+
+            // Video Panel
             const videoPanel = document.getElementById('videoPanel');
+            const videoContainer = document.getElementById('videoContainerBox');
             const videoEl = document.getElementById('drawerVideo');
             if (item.video_id || item.service === 'flood') {
                 videoPanel.style.display = 'flex';
+                videoContainer.style.display = 'block';
                 const videoSrc = item.video_id === 'vi' ? 'test_videos_merged/vi_ahmadu_bello_way.mp4' :
                                  (item.video_id === 'ikoyi' ? 'test_videos_merged/banana_island_drone.mp4' :
                                  (item.video_id === 'third_mainland' ? 'test_videos_merged/third_mainland_bridge_inspection.mp4' : 'test_videos_merged/lekki_vgc_flood.mp4'));
-                videoEl.src = videoSrc;
-                videoEl.load();
-                videoEl.play().catch(e => console.log('Autoplay muted'));
+                if (!videoEl.src.endsWith(videoSrc)) {
+                    videoEl.src = videoSrc;
+                    videoEl.load();
+                }
+                videoEl.play().catch(() => {});
             } else {
-                videoPanel.style.display = 'none';
+                videoPanel.style.display = 'flex';
+                videoContainer.style.display = 'none';
             }
 
-            document.getElementById('drawerMetric1').textContent = item.service === 'flood' ? `${item.water_depth_cm || 45}cm` : (item.units_available || '3 Units');
-            document.getElementById('drawerMetricLbl1').textContent = item.service === 'flood' ? 'Water Depth' : 'Available Units';
-            
-            document.getElementById('drawerMetric2').textContent = (item.assigned_unit || 'DISPATCH').split(' ')[0].toUpperCase();
-            document.getElementById('drawerMetricLbl2').textContent = 'Assigned Asset';
+            document.getElementById('drawerMetric1').textContent = item.service === 'flood' ? `${item.water_depth_cm || 0}cm` : (item.status || 'ACTIVE');
+            document.getElementById('drawerMetricLbl1').textContent = item.service === 'flood' ? 'Reported Depth' : 'Sector State';
+            document.getElementById('drawerMetric2').textContent = (item.assigned_unit || 'UNIT').split(' ')[0].toUpperCase();
+            document.getElementById('drawerMetric3').textContent = item.elevation_m != null ? `${item.elevation_m}m` : '--';
+            document.getElementById('drawerMetricLbl3').textContent = 'Ground ASL';
 
             document.getElementById('auditTraceBox').innerHTML = `
-                <div style="color:var(--text-muted);">> Standby: Target sector locked [${item.location}]</div>
-                <div>> Severity Grade: ${item.severity} · Category: ${(item.service||'').toUpperCase()}</div>
-                <div>> Unit Assigned: ${item.assigned_unit || 'Command Interdiction'}</div>
+                <div style="color:var(--accent-cyan);">&gt; Sector Locked: ${escapeHtml(item.location)}</div>
+                <div>&gt; Report: ${escapeHtml(item.description || 'Active operational monitoring.')}</div>
+                <div>&gt; Assigned: ${escapeHtml(item.assigned_unit || 'Calculating nearest station...')}</div>
             `;
 
+            renderAuditTimeline(item.events || []);
             loadNatlasBroadcast();
         }
 
-        // Sovereign N-ATLAS Broadcast Synthesis
+        function renderAuditTimeline(events) {
+            const list = document.getElementById('incidentTimelineList');
+            document.getElementById('auditEventsCount').textContent = `${events.length} Events`;
+            if (!events || events.length === 0) {
+                list.innerHTML = `<div class="timeline-row">No dispatch events logged yet.</div>`;
+                return;
+            }
+            list.innerHTML = events.map(ev => {
+                const t = ev.timestamp && ev.timestamp.includes('T') ? ev.timestamp.split('T')[1].slice(0, 8) + ' UTC' : (ev.timestamp || '');
+                return `
+                    <div class="timeline-row">
+                        <div class="timeline-meta">
+                            <span style="font-weight:700; color:var(--accent-cyan);">${escapeHtml(ev.event_type)} · ${escapeHtml(ev.actor)}</span>
+                            <span class="tabular-nums">${escapeHtml(t)}</span>
+                        </div>
+                        <div>${escapeHtml(ev.summary)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // --- FETCH & APPLY LIVE DEM + EXPOSURE + ROUTING TO DRAWER ---
+        async function refreshInspectorGIS() {
+            if (!currentInspectedItem || !currentInspectedItem.coordinates) return;
+            const [lon, lat] = currentInspectedItem.coordinates;
+            const svc = currentInspectedItem.service || 'flood';
+
+            const btn = document.getElementById('btnRecalcRoute');
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/gis/probe?lon=${lon}&lat=${lat}&service=${svc}&radius_m=1000`);
+                if (res.ok) {
+                    const data = await res.json();
+                    applyGISTelemetryToDrawer(data.dem, data.exposure, data.route);
+                    drawRouteOnMap(data.route);
+                }
+            } catch (e) {
+                console.warn('GIS refresh warning:', e);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function applyGISTelemetryToDrawer(dem, exposure, route) {
+            document.getElementById('gisElevVal').textContent = `${dem.elevation_m}m`;
+            document.getElementById('gisElevSub').textContent = dem.is_sink_basin ? 'SINK BASIN' : `${dem.slope_pct}% SLOPE`;
+
+            document.getElementById('gisRunoffVal').textContent = `${dem.runoff_bearing_deg}° ${dem.runoff_compass}`;
+            document.getElementById('gisRunoffSub').textContent = `Pond ~${dem.predicted_ponding_cm}cm`;
+
+            document.getElementById('gisPopVal').textContent = exposure.exposed_population.toLocaleString();
+
+            document.getElementById('gisEtaVal').textContent = `${route.emergency_eta_min}m`;
+            document.getElementById('gisDistSub').textContent = `${route.distance_km} km`;
+
+            document.getElementById('drawerMetric3').textContent = `${dem.elevation_m}m`;
+            document.getElementById('drawerMetric2').textContent =
+                dem.vehicle_clearance === 'AMPHIBIOUS_OR_CANOE_ONLY' ? 'AMPHIBIAN' :
+                (dem.vehicle_clearance === 'HIGH_CLEARANCE_TRUCK_ONLY' ? 'HEAVY TRUCK' : 'ALL UNITS');
+
+            document.getElementById('routeStationName').textContent = route.origin_station.name;
+            document.getElementById('routeUnitAsset').textContent = route.origin_station.dispatch_asset;
+            document.getElementById('routeProviderLabel').textContent = route.provider;
+
+            const banner = document.getElementById('routeFloodBanner');
+            const bannerTxt = document.getElementById('routeFloodBannerText');
+            if (route.flood_detour_applied) {
+                banner.className = 'detour-banner avoided';
+                bannerTxt.textContent = `Flood Basin Avoided — Rerouted (+${route.detour_delta_km} km / +${route.detour_delta_min} min)`;
+            } else if (route.intersects_flood) {
+                banner.className = 'detour-banner avoided';
+                bannerTxt.textContent = `Submerged Approach — Deploy Amphibious / High-Clearance Unit`;
+            } else {
+                banner.className = 'detour-banner clear';
+                bannerTxt.textContent = `Corridor Verified Clear of Active Flood Basins (${route.active_flood_hazards_count} checked)`;
+            }
+
+            const steps = route.steps || [];
+            document.getElementById('routeStepsCount').textContent = steps.length;
+            const stepsContainer = document.getElementById('routeStepsList');
+            stepsContainer.innerHTML = steps.map((st, idx) => `
+                <div class="step-item">
+                    <span><strong class="tabular-nums">${idx + 1}.</strong> ${escapeHtml(st.instruction)}</span>
+                    <span class="tabular-nums" style="color:var(--text-muted); flex-shrink:0;">${st.distance_m}m</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleRouteSteps() {
+            document.getElementById('routeStepsList').classList.toggle('expanded');
+        }
+
+        // --- SOVEREIGN N-ATLAS BROADCAST & TERMII SMS ---
         async function loadNatlasBroadcast() {
             if (!currentInspectedItem) return;
             const alertBox = document.getElementById('natlasAlertText');
             alertBox.classList.add('skeleton-shimmer');
-            alertBox.textContent = 'Synthesizing sovereign multilingual civic broadcast via N-ATLAS...';
 
-            const zoneSlug = (currentInspectedItem.video_id || currentInspectedItem.location || 'lekki').toLowerCase().replace(/\s+/g, '_');
+            const zoneSlug = (currentInspectedItem.video_id || 'lekki').toLowerCase();
             const hazard = currentInspectedItem.service || 'flood';
+            const params = new URLSearchParams({
+                lang: currentGlobalLang,
+                hazard: hazard,
+                zone_name: currentInspectedItem.location || 'Lagos Sector',
+                water_cm: String(currentInspectedItem.water_depth_cm || 0),
+                severity: currentInspectedItem.severity || 'WARNING'
+            });
 
             try {
-                const res = await fetch(`${API_BASE}/natlas/broadcast/${zoneSlug}?lang=${currentGlobalLang}&hazard=${hazard}`);
+                const res = await fetch(`${API_BASE}/natlas/broadcast/${encodeURIComponent(zoneSlug)}?${params.toString()}`);
+                alertBox.classList.remove('skeleton-shimmer');
                 if (res.ok) {
                     const data = await res.json();
-                    alertBox.classList.remove('skeleton-shimmer');
                     alertBox.textContent = data.broadcast_text;
-                } else {
-                    alertBox.classList.remove('skeleton-shimmer');
-                    alertBox.textContent = `EMERGENCY ALERT: Active ${hazard.toUpperCase()} reported in ${currentInspectedItem.location}. Emergency responders are actively on scene. Avoid corridor.`;
                 }
             } catch (e) {
                 alertBox.classList.remove('skeleton-shimmer');
-                alertBox.textContent = `EMERGENCY ALERT: Active ${hazard.toUpperCase()} in ${currentInspectedItem.location}. Avoid area.`;
             }
         }
 
-        // Speech Audio Readout (Web Speech API)
         function speakBroadcast() {
             const text = document.getElementById('natlasAlertText').textContent;
             if (!window.speechSynthesis) {
-                alert('Audio speech synthesis is not supported on this browser.');
+                showToast('Speech Unavailable', 'Web Speech synthesis is not supported in this browser.', 'warning');
                 return;
             }
-            window.speechSynthesis.cancel();
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                showToast('Audio Stopped', 'Voice broadcast readout halted.', 'info');
+                return;
+            }
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 0.95;
-            utterance.pitch = 1.0;
             window.speechSynthesis.speak(utterance);
+            showToast('Audio Broadcast Active', `Reading ${LANG_NAMES[currentGlobalLang]} civic alert aloud.`, 'info');
         }
 
-        // Termii SMS Transmission
         async function dispatchCivicSMS() {
             const text = document.getElementById('natlasAlertText').textContent;
+            const phoneInput = document.getElementById('smsTargetPhone').value.trim();
+            const btn = document.getElementById('btnSendSms');
+            btn.disabled = true;
+
             try {
                 const res = await fetch(`${API_BASE}/broadcast/sms`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        phone: '+234 800 LIFELINE',
-                        message: text
+                        phone: phoneInput || '+234 800 LIFELINE',
+                        message: text,
+                        incident_id: currentInspectedItem ? currentInspectedItem.id : null
                     })
                 });
                 const data = await res.json();
-                alert(`Broadcast Alert Transmitted via ${data.provider || 'Termii'}:\n\nMessage ID: ${data.message_id || 'TRM-ACK'}\nDestination: Community Alert Relay\n\n${text}`);
+                showToast(
+                    `SMS Dispatched (${data.message_id || 'TRM-ACK'})`,
+                    `Via ${data.provider} to ${data.destination} (${data.character_count} chars).`,
+                    'success'
+                );
+                if (currentInspectedItem && currentInspectedItem.id) {
+                    selectIncident(currentInspectedItem.id);
+                }
             } catch (e) {
-                alert(`Broadcast queued for radio transmission:\n\n${text}`);
+                showToast('SMS Gateway Error', 'Could not reach telecom dispatch endpoint.', 'danger');
+            } finally {
+                btn.disabled = false;
             }
         }
 
-        // Run Gemini 3 Live Vision Audit
+        // --- GEMINI 3 VISION AUDIT ---
         async function runVisionAudit() {
             const btn = document.getElementById('btnAuditAction');
             const trace = document.getElementById('auditTraceBox');
             btn.disabled = true;
-            btn.innerHTML = '<i data-lucide="loader-2" style="width:11px;height:11px;"></i> Auditing...';
-            lucide.createIcons();
+            btn.innerHTML = '<i data-lucide="loader-2" class="spin-icon" style="width:11px;height:11px;"></i> Auditing...';
+            lucide.createIcons({ nodes: [btn] });
 
             trace.innerHTML = `
-                <div style="color:var(--accent-cyan);">> Querying Gemini 3 Multimodal Video Pipeline...</div>
-                <div style="color:var(--text-muted);">> Evaluating spatial occlusion and street clearance...</div>
+                <div style="color:var(--accent-cyan);">&gt; Uploading frame stream to Gemini 3 Multimodal Pipeline...</div>
+                <div style="color:var(--text-muted);">&gt; Measuring wheel-arch &amp; curb occlusion depth...</div>
             `;
 
-            const zoneSlug = currentInspectedItem && currentInspectedItem.video_id ? currentInspectedItem.video_id : 'lekki';
+            const zoneSlug = (currentInspectedItem && currentInspectedItem.video_id) ? currentInspectedItem.video_id : 'lekki';
+            const incQuery = (currentInspectedItem && currentInspectedItem.id) ? `?incident_id=${encodeURIComponent(currentInspectedItem.id)}` : '';
 
             try {
-                const res = await fetch(`${API_BASE}/analyze/${zoneSlug}`);
-                if (res.ok) {
-                    const data = await res.json();
+                const res = await fetch(`${API_BASE}/analyze/${zoneSlug}${incQuery}`);
+                const data = await res.json();
+                if (res.ok && !data.error) {
                     const flood = data.flood_assessment || {};
                     const log = data.logistics_decision || {};
-                    const depth = flood.water_level_cm || 65;
-                    const asset = log.recommended_asset || 'AMPHIBIOUS RESCUE';
+                    const depth = flood.water_level_cm != null ? flood.water_level_cm : 60;
+                    const asset = log.recommended_asset || 'AMPHIBIOUS UNIT';
 
                     document.getElementById('drawerMetric1').textContent = `${depth}cm`;
                     document.getElementById('drawerMetric2').textContent = asset;
-                    document.getElementById('drawerMetric3').textContent = '97%';
 
                     trace.innerHTML = `
-                        <div style="color:var(--accent-infra); font-weight:700;">> Multimodal Audit Complete [97% Confidence]</div>
-                        <div>> Detected Water Level: ${depth}cm</div>
-                        <div>> Ground Reference: ${flood.reference_landmark || 'Vehicle wheel arch'}</div>
-                        <div>> Tactical Order: Deploy ${asset}</div>
-                        <div style="color:var(--accent-crime);">> N-ATLAS Alert Synchronized</div>
+                        <div style="color:var(--accent-infra); font-weight:700;">&gt; Gemini 3 Multimodal Audit Verified</div>
+                        <div>&gt; Measured Depth: ${depth}cm (Ref: ${escapeHtml(flood.reference_landmark || 'Vehicle chassis')})</div>
+                        <div>&gt; Tactical Asset: ${escapeHtml(asset)} · Action: ${escapeHtml(log.action_trigger || 'DEPLOY')}</div>
                     `;
-                    loadNatlasBroadcast();
+                    showToast('Vision Audit Complete', `Measured ${depth}cm water depth; recommended ${asset}.`, 'success');
                 } else {
-                    trace.innerHTML += `<div style="color:var(--accent-fire);">> Vision engine fallback active. Telemetry nominal.</div>`;
+                    const demEst = document.getElementById('gisRunoffSub').textContent;
+                    trace.innerHTML = `
+                        <div style="color:var(--accent-crime);">&gt; Vision API Key Standby (${escapeHtml(data.error || 'Add GOOGLE_API_KEY')})</div>
+                        <div>&gt; Falling back to Copernicus 90m DEM Hydrology (${escapeHtml(demEst)})</div>
+                    `;
                 }
             } catch (err) {
-                trace.innerHTML += `<div style="color:var(--accent-crime);">> Network simulation: Depth 65cm confirmed.</div>`;
+                trace.innerHTML += `<div style="color:var(--accent-fire);">&gt; Vision request timed out.</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="scan" style="width:11px;height:11px;"></i> Run Vision Audit';
+                lucide.createIcons({ nodes: [btn] });
             }
-
-            btn.disabled = false;
-            btn.innerHTML = '<i data-lucide="scan" style="width:11px;height:11px;"></i> Run Audit';
-            lucide.createIcons();
         }
 
-        function dispatchUnitFromDrawer() {
+        // --- REAL TACTICAL UNIT DISPATCH & LIFECYCLE UPDATES ---
+        async function dispatchUnitFromDrawer() {
             if (!currentInspectedItem) return;
-            alert(`Emergency Unit Dispatched:\n\nUnit: ${currentInspectedItem.assigned_unit || 'LASEMA Rapid Patrol'}\nDestination: ${currentInspectedItem.location}`);
-            updateIncidentStatus('DISPATCHED');
+            if (!currentInspectedItem.id) {
+                // Static GeoJSON station/corridor node: compute route and notify
+                await refreshInspectorGIS();
+                showToast('Corridor Route Active', `Computed tactical response vector to ${currentInspectedItem.location}.`, 'info');
+                return;
+            }
+
+            const btn = document.getElementById('btnDispatchDrawer');
+            btn.disabled = true;
+            try {
+                const res = await fetch(`${API_BASE}/incidents/${currentInspectedItem.id}/dispatch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ actor: 'ESC Command Operator' })
+                });
+                if (res.ok) {
+                    const payload = await res.json();
+                    currentInspectedItem = payload.incident;
+                    populateDrawerFromIncident(payload.incident);
+                    drawRouteOnMap(payload.route);
+                    zoomToActiveRoute();
+                    await loadIncidents();
+                    await fetchTelemetry();
+                    showToast(
+                        'Responder Unit Dispatched',
+                        `${payload.incident.assigned_unit} en route (${payload.route.distance_km} km, ETA ${payload.route.emergency_eta_min} min).`,
+                        'success'
+                    );
+                }
+            } catch (e) {
+                showToast('Dispatch Failed', 'Could not update dispatch assignment.', 'danger');
+            } finally {
+                btn.disabled = false;
+            }
         }
 
         async function updateIncidentStatus(newStatus) {
             if (!currentInspectedItem || !currentInspectedItem.id) return;
             try {
-                await fetch(`${API_BASE}/incidents/${currentInspectedItem.id}/update`, {
+                const res = await fetch(`${API_BASE}/incidents/${currentInspectedItem.id}/update`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
+                    body: JSON.stringify({ status: newStatus, actor: 'ESC Command Operator' })
                 });
-                currentInspectedItem.status = newStatus;
-                loadIncidents();
-                fetchTelemetry();
+                if (res.ok) {
+                    const updated = await res.json();
+                    currentInspectedItem = updated;
+                    populateDrawerFromIncident(updated);
+                    await loadIncidents();
+                    await fetchTelemetry();
+                    showToast('Status Updated', `${updated.id} transitioned to ${newStatus}.`, 'info');
+                }
             } catch (e) {
-                console.error('Update failed', e);
+                showToast('Update Error', 'Failed to persist incident status.', 'danger');
             }
         }
 
-        function toggleDrawer() {
-            const ws = document.getElementById('workspaceContainer');
-            ws.classList.toggle('drawer-closed');
-            setTimeout(() => map.invalidateSize(), 300);
+        // --- EXPORT INCIDENTS (GEOJSON / CSV) ---
+        function exportIncidents(format) {
+            const params = new URLSearchParams({ format });
+            if (selectedService !== 'all') params.set('service', selectedService);
+            if (selectedStatusFilter !== 'all') params.set('status', selectedStatusFilter);
+            window.open(`${API_BASE}/incidents/export?${params.toString()}`, '_blank');
+            showToast('Export Generated', `Downloading Lagos operational log as ${format.toUpperCase()}.`, 'info');
         }
 
-        function openDrawer() {
-            const ws = document.getElementById('workspaceContainer');
-            ws.classList.remove('drawer-closed');
-            setTimeout(() => map.invalidateSize(), 300);
-        }
-
+        // --- CITIZEN / OPERATOR REPORT MODAL, GPS & N-ATLAS VOICE TRIAGE ---
         function openReportModal() {
             document.getElementById('reportModal').classList.add('active');
         }
@@ -1687,17 +2904,106 @@
             document.getElementById('reportModal').classList.remove('active');
         }
 
+        function useBrowserGPS() {
+            if (!navigator.geolocation) {
+                showToast('GPS Unavailable', 'Browser geolocation is not supported.', 'warning');
+                return;
+            }
+            const lbl = document.getElementById('reportLockedCoordsLabel');
+            lbl.textContent = 'Acquiring high-accuracy GPS fix...';
+            navigator.geolocation.getCurrentPosition(async pos => {
+                const lat = Number(pos.coords.latitude.toFixed(6));
+                const lon = Number(pos.coords.longitude.toFixed(6));
+                lockedReportCoords = [lon, lat];
+                lbl.textContent = `GPS Fix Locked: [${lat}°N, ${lon}°E]`;
+                try {
+                    const r = await fetch(`${API_BASE}/gis/reverse?lon=${lon}&lat=${lat}`);
+                    if (r.ok) {
+                        const d = await r.json();
+                        document.getElementById('reportLocation').value = d.location;
+                    }
+                } catch (e) {}
+            }, () => {
+                lbl.textContent = 'GPS permission declined — enter street name or use Pick on Map.';
+            }, { enableHighAccuracy: true, timeout: 6000 });
+        }
+
+        function startVoiceDistressCapture() {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRec) {
+                showToast('Voice Capture Unsupported', 'Use Chrome/Edge for live microphone speech-to-text, or type and click N-ATLAS Triage.', 'warning');
+                return;
+            }
+            const btn = document.getElementById('btnVoiceDictate');
+            const rec = new SpeechRec();
+            rec.lang = currentGlobalLang === 'yoruba' ? 'yo-NG' : 'en-NG';
+            rec.interimResults = false;
+
+            btn.disabled = true;
+            btn.textContent = 'Listening...';
+
+            rec.onresult = async (ev) => {
+                const transcript = ev.results[0][0].transcript;
+                document.getElementById('reportDesc').value = transcript;
+                await autoTriageFromTranscript();
+            };
+            rec.onerror = () => {
+                showToast('Microphone Notice', 'Could not capture voice transcript.', 'warning');
+            };
+            rec.onend = () => {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="mic" style="width:11px;height:11px;"></i> Voice Input';
+                lucide.createIcons({ nodes: [btn] });
+            };
+            rec.start();
+        }
+
+        async function autoTriageFromTranscript() {
+            const text = document.getElementById('reportDesc').value.trim();
+            if (!text) {
+                showToast('Enter Distress Text', 'Type or dictate the emergency situation first.', 'warning');
+                return;
+            }
+            try {
+                const res = await fetch(`${API_BASE}/natlas/distress`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ transcript: text, language: currentGlobalLang })
+                });
+                if (res.ok) {
+                    const parsed = await res.json();
+                    document.getElementById('reportService').value = parsed.detected_hazard || 'flood';
+                    if (parsed.estimated_water_cm != null) {
+                        document.getElementById('reportWaterDepth').value = parsed.estimated_water_cm;
+                    }
+                    if (parsed.extracted_location && !document.getElementById('reportLocation').value.trim()) {
+                        document.getElementById('reportLocation').value = parsed.extracted_location;
+                    }
+                    showToast(
+                        `N-ATLAS Triage: ${(parsed.detected_hazard || '').toUpperCase()} (${parsed.severity})`,
+                        `Priority: ${parsed.dispatch_priority}${parsed.extracted_location ? ' · Landmark: ' + parsed.extracted_location : ''}`,
+                        'info'
+                    );
+                }
+            } catch (e) {
+                showToast('Triage Error', 'Could not reach N-ATLAS parser.', 'danger');
+            }
+        }
+
         async function submitCitizenReport(e) {
             e.preventDefault();
             const btn = document.getElementById('submitReportBtn');
             btn.disabled = true;
-            btn.innerHTML = 'Submitting...';
+            btn.textContent = 'Geocoding & Routing...';
 
+            const svc = document.getElementById('reportService').value;
             const payload = {
-                service: document.getElementById('reportService').value,
-                location: document.getElementById('reportLocation').value,
-                description: document.getElementById('reportDesc').value,
-                contact: document.getElementById('reportPhone').value,
+                service: svc,
+                location: document.getElementById('reportLocation').value.trim(),
+                description: document.getElementById('reportDesc').value.trim(),
+                contact: document.getElementById('reportPhone').value.trim(),
+                water_depth_cm: svc === 'flood' ? Number(document.getElementById('reportWaterDepth').value || 45) : 0,
+                coordinates: lockedReportCoords,
                 language: currentGlobalLang
             };
 
@@ -1710,36 +3016,105 @@
 
                 if (res.ok) {
                     const data = await res.json();
+                    lockedReportCoords = null;
+                    document.getElementById('reportDesc').value = '';
+                    document.getElementById('reportLocation').value = '';
+                    document.getElementById('reportLockedCoordsLabel').textContent = 'Coordinates will auto-geocode within Lagos State';
                     closeReportModal();
-                    alert(`Distress Report Lodged Successfully!\n\nIncident ID: ${data.incident.id}\nAssigned Unit: ${data.incident.assigned_unit}\n\nBroadcast Alert generated in 5 Nigerian languages.`);
-                    
+
+                    showToast(
+                        `Incident Logged (${data.incident.id})`,
+                        `Assigned ${data.incident.assigned_unit} · Road ETA ${data.route.emergency_eta_min} min (${data.route.distance_km} km).`,
+                        'success'
+                    );
+
                     await loadIncidents();
                     await fetchTelemetry();
-                    selectIncident(data.incident.id);
+                    await selectIncident(data.incident.id);
                 } else {
-                    alert('Submission error. Please retry or dial 767 directly.');
+                    showToast('Submission Failed', 'Check inputs or dial Lagos Emergency 767 / 112.', 'danger');
                 }
             } catch (err) {
-                alert('Network timeout. Please dial 767 directly.');
+                showToast('Network Error', 'Unable to reach command server. Dial 767 / 112.', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="send" style="width:14px;height:14px;"></i> Submit &amp; Compute Dispatch';
+                lucide.createIcons({ nodes: [btn] });
             }
-
-            btn.disabled = false;
-            btn.innerHTML = '<i data-lucide="send" style="width:14px;height:14px;"></i> Submit Distress Report';
-            lucide.createIcons();
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
+        // --- SYSTEM DIAGNOSTICS MODAL ---
+        async function openDiagnosticsModal() {
+            document.getElementById('diagnosticsModal').classList.add('active');
+            const body = document.getElementById('diagnosticsBody');
+            body.innerHTML = '<div class="skeleton-shimmer" style="height:140px; border-radius:var(--radius-inner);"></div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/health`);
+                const data = await res.json();
+                const sub = data.subsystems || {};
+                const sp = (data.gis_capabilities && data.gis_capabilities.student_pack_integrations) || {};
+
+                const rows = [
+                    ['Platform Build', data.platform],
+                    ['Incident Database', sub.incident_store],
+                    ['DEM Hydrology Engine', sub.gis_dem_engine],
+                    ['Road Routing Engine', sub.gis_routing_engine],
+                    ['Spatial Exposure / CARTO', sub.gis_spatial_sql],
+                    ['CARTO Retina Basemaps', sp.carto_basemaps],
+                    ['CARTO Cloud SQL Token', sp.carto_spatial_sql],
+                    ['Mapbox Traffic / 3D Token', sp.mapbox_routing_3d],
+                    ['Sovereign N-ATLAS (5-Lang)', sub.natlas_sovereign],
+                    ['Termii Telecom SMS', sub.termii_gateway],
+                    ['Gemini 3 Vision Agent', sub.vision_agent]
+                ];
+
+                body.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:6px;">
+                        ${rows.map(([k, v]) => `
+                            <div style="display:flex; justify-content:space-between; gap:12px; padding:6px 8px; background:var(--bg-base); border:1px solid var(--border-hairline); border-radius:var(--radius-inner); font-size:0.70rem;">
+                                <span style="color:var(--text-secondary); font-weight:600;">${escapeHtml(k)}</span>
+                                <span class="tabular-nums" style="color:var(--accent-cyan); text-align:right;">${escapeHtml(v)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (e) {
+                body.innerHTML = `<div class="error-state-box">Unable to query /api/health diagnostics.</div>`;
+            }
+        }
+
+        function closeDiagnosticsModal() {
+            document.getElementById('diagnosticsModal').classList.remove('active');
+        }
+
+        // --- DRAWER TOGGLES ---
+        function toggleDrawer() {
+            const ws = document.getElementById('workspaceContainer');
+            ws.classList.toggle('drawer-closed');
+            setTimeout(() => map.invalidateSize(), 260);
+        }
+
+        function openDrawer() {
+            const ws = document.getElementById('workspaceContainer');
+            ws.classList.remove('drawer-closed');
+            setTimeout(() => map.invalidateSize(), 260);
+        }
+
+        // --- BOOTSTRAP ---
+        document.addEventListener('DOMContentLoaded', async () => {
             initMap();
             startClock();
-            fetchTelemetry();
-            loadIncidents();
             lucide.createIcons();
 
-            setTimeout(() => {
-                if (allIncidents.length > 0) {
-                    selectIncident(allIncidents[0].id);
-                }
-            }, 600);
+            await Promise.all([
+                fetchTelemetry(),
+                loadIncidents()
+            ]);
+
+            if (allIncidents.length > 0) {
+                selectIncident(allIncidents[0].id);
+            }
 
             setInterval(() => {
                 fetchTelemetry();
